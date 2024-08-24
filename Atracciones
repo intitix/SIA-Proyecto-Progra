@@ -1,0 +1,36 @@
+public class Atracciones {
+  private String nombreAtraccion;
+  private int capacidad;
+
+
+  //Constructores
+  public Atracciones(String nombreAtraccion, int capacidad) {
+    this.nombreAtraccion = nombreAtraccion;
+    this.capacidad = capacidad;
+  }
+
+  //Getters
+  public String getNombreAtraccion() {
+    return nombreAtraccion;
+  }
+  public int getCapacidad() {
+    return capacidad;
+  }
+
+
+  //Setters
+  
+  public void setNombreAtraccion(String nombreAtraccion) {
+    this.nombreAtraccion = nombreAtraccion;
+  }
+
+  public void setCapacidad(int capacidad) {
+    this.capacidad = capacidad;
+  }
+
+
+  //Metodos
+  public void mostrarAtraccion() {
+    System.out.println("Nombre: [" + nombreAtraccion+"] Capacidad: [" + capacidad+" personas]");
+  }
+}
