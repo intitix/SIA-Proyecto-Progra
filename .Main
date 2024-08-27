@@ -32,6 +32,7 @@ public class Main {
       System.out.print("Escoja una opción: ");
       opcion = lector.nextInt();
       lector.nextLine();  // Limpiar el buffer de entrada
+      //GESTION ATRACCIONES
       if (opcion == 1) {  
         System.out.println("Entrando en el gestor de atracciones... ");
         while (true) {
@@ -41,7 +42,9 @@ public class Main {
           System.out.println("");
           System.out.println("1. Crear Atracciones");
           System.out.println("2. Lista Atracciones");
-          System.out.println("4. Volver al menú principal");
+          System.out.println("3. Mostrar Atracciones por rango");
+          System.out.println("4. Eliminar Atracción");
+          System.out.println("5. Volver al menú principal");
 
           System.out.print("Escoja una opción: ");
           opcion = lector.nextInt();
@@ -75,7 +78,24 @@ public class Main {
             System.out.println("Presione Enter para continuar...");
             lector.nextLine();
           }
-          else if (opcion == 4) { //VOLVER AL MENU
+
+          else if (opcion == 4) { //Eliminar Atraccion
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            System.out.println("ELIMINAR ATRACCION");
+            System.out.println("");
+            for (int i = 0; i < atracciones.size(); i++) {
+              System.out.println((i + 1) + ". " + atracciones.get(i).getNombreAtraccion());
+            }
+            System.out.print("Ingrese el número de la atracción a eliminar: ");
+            int indice = lector.nextInt();
+            lector.nextLine();
+            if (indice >= 1 && indice <= atracciones.size()) {
+              atracciones.remove(indice - 1);
+              System.out.println("Atracción eliminada exitosamente.");
+            }
+          }
+          else if (opcion == 5) { //VOLVER AL MENU
             break;
           }
         }
