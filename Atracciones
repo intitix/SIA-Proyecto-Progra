@@ -7,7 +7,6 @@ public class Atracciones {
   public Atracciones(String nombreAtraccion, int capacidad) {
     this.nombreAtraccion = nombreAtraccion;
     this.capacidad = capacidad;
-    //Holaaaaaaaaaaa
   }
 
   //Getters
