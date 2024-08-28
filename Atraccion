@@ -1,12 +1,13 @@
 public class Atraccion {
   private String nombreAtraccion;
   private int capacidad;
-
+  private int popularidad;
 
   //Constructores
   public Atraccion(String nombreAtraccion, int capacidad) {
     this.nombreAtraccion = nombreAtraccion;
     this.capacidad = capacidad;
+    this.popularidad = 0;
   }
 
   //Getters
@@ -28,6 +29,14 @@ public class Atraccion {
     this.capacidad = capacidad;
   }
 
+  // Método para incrementar la popularidad
+    public void incrementarPopularidad() {
+        this.popularidad++;
+    }
+
+    public int getPopularidad() {
+        return this.popularidad;
+    }
 
   // Sobrecarga de métodos
     public void mostrarAtraccion() {
