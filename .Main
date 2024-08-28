@@ -6,7 +6,8 @@ public class Main {
   public static void main(String[] args) {
 
     //PARQUE
-    Parque parqueCentral = new Parque("PUCV LANDIA");
+    Parque parqueCentral = new Parque("PUCV LANDIA", 8, 18);
+    
 
     //DATOS PRECARGADOS
     //ATRACCIONES
@@ -24,13 +25,14 @@ public class Main {
       //LIMPIAR PANTALLA
       System.out.print("\033[H\033[2J");
       System.out.flush();
-      //
+      parqueCentral.mostrarInfo(true); //EL TRUE MOSTRARA EL NOMBRE DEL PARQUE
       System.out.println("MENU");
       System.out.println("");
       System.out.println("1. Gestion de Atracciones");
       System.out.println("2. Gestion de Reservas");
       System.out.println("3. Gestion de Estadisticas");
-      System.out.println("4. Salir");
+      System.out.println("4. Modificar Horarios de apertura/cierre");
+      System.out.println("5. Salir");
       System.out.print("Escoja una opcion: ");
       opcion = lector.nextInt();
       lector.nextLine();  // Limpiar el buffer de entrada
@@ -173,8 +175,37 @@ public class Main {
       else if (opcion == 3) {
         System.out.println("Entrando en el gestor de estadísticas... ");
         }
-          
-      else if (opcion == 4) {
+      
+      
+      else if (opcion == 4) { //MODIFICAR HORARIOS
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("MODIFICAR HORARIOS");
+        System.out.println("");
+
+        // Mostrar el horario actual
+        parqueCentral.mostrarInfo(false); // Mostrar solo el horario actual
+
+        // Solicitar nuevo horario de apertura
+        System.out.print("Ingrese la nueva hora de apertura (0-23): ");
+        int nuevaHoraApertura = lector.nextInt();
+        lector.nextLine(); // Limpiar el buffer
+
+        // Solicitar nuevo horario de cierre
+        System.out.print("Ingrese la nueva hora de cierre (0-23): ");
+        int nuevaHoraCierre = lector.nextInt();
+        lector.nextLine(); // Limpiar el buffer
+
+        // Actualizar horarios en el objeto Parque
+        parqueCentral.setHoraApertura(nuevaHoraApertura);
+        parqueCentral.setHoraCierre(nuevaHoraCierre);
+
+        // Confirmar la modificación
+        System.out.println("Horario modificado exitosamente.");
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+}
+      else if (opcion == 5) {
         System.out.println("Saliendo... ");
         break;
         }
