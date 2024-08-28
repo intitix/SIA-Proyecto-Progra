@@ -122,4 +122,41 @@ public class GestorReservas {
         System.out.println("Presione Enter para continuar...");
         lector.nextLine();
     }
+
+    public void mostrarEstadisticas() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("ESTADÍSTICAS DEL PARQUE");
+
+        int totalReservas = reservas.size();
+        System.out.println("Número total de reservas: " + totalReservas);
+
+        if (reservas.isEmpty()) {
+            System.out.println("No hay reservas para mostrar estadísticas.");
+        } else {
+            Map<Atraccion, Integer> contadorReservas = new HashMap<>();
+
+            for (Reserva reserva : reservas) {
+                Atraccion atraccion = reserva.getAtraccion();
+                contadorReservas.put(atraccion, contadorReservas.getOrDefault(atraccion, 0) + 1);
+            }
+
+            Atraccion atraccionMasPopular = null;
+            int maxReservas = 0;
+
+            for (Map.Entry<Atraccion, Integer> entry : contadorReservas.entrySet()) {
+                if (entry.getValue() > maxReservas) {
+                    maxReservas = entry.getValue();
+                    atraccionMasPopular = entry.getKey();
+                }
+            }
+
+            if (atraccionMasPopular != null) {
+                System.out.println("La atracción más popular es: " + atraccionMasPopular.getNombreAtraccion() + " con " + maxReservas + " reservas.");
+            }
+        }
+
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
 }
