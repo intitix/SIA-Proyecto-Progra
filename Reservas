@@ -1,14 +1,15 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Reserva {
     private int grupoPersonas;
-    private Atracciones atraccionElegida;
+    private Atracciones atraccion;
     private Date fechaHora;
 
     // Constructor
-    public Reserva(int grupoPersonas, Atracciones atraccionElegida, Date fechaHora) {
+    public Reserva(int grupoPersonas, Atracciones atraccion, Date fechaHora) {
         this.grupoPersonas = grupoPersonas;
-        this.atraccionElegida = atraccionElegida;
+        this.atraccion = atraccion;
         this.fechaHora = fechaHora;
     }
 
@@ -17,8 +18,8 @@ public class Reserva {
         return grupoPersonas;
     }
 
-    public Atracciones getAtraccionElegida() {
-        return atraccionElegida;
+    public Atracciones getAtraccion() {
+        return atraccion;
     }
 
     public Date getFechaHora() {
@@ -30,16 +31,17 @@ public class Reserva {
         this.grupoPersonas = grupoPersonas;
     }
 
-    public void setAtraccionElegida(Atracciones atraccionElegida) {
-        this.atraccionElegida = atraccionElegida;
+    public void setAtraccion(Atracciones atraccion) {
+        this.atraccion = atraccion;
     }
 
     public void setFechaHora(Date fechaHora) {
         this.fechaHora = fechaHora;
     }
 
-    // Método para mostrar la información de la reserva
+    // Mostrar reserva
     public void mostrarReserva() {
-        System.out.println("Reserva para " + grupoPersonas + " personas en la atracción " + atraccionElegida.getNombreAtraccion() + " el " + fechaHora);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        System.out.println("Grupo de personas: " + grupoPersonas + ", Atracción: " + atraccion.getNombreAtraccion() + ", Fecha y hora: " + sdf.format(fechaHora));
     }
-}    
+}
