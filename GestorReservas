@@ -1,0 +1,125 @@
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+public class GestorReservas {
+
+    private List<Reserva> reservas;
+    private List<Atracciones> atracciones;
+    private Scanner lector;
+
+    public GestorReservas(List<Reserva> reservas, List<Atracciones> atracciones, Scanner lector) {
+        this.reservas = reservas;
+        this.atracciones = atracciones;
+        this.lector = lector;
+    }
+
+    public void crearReserva() throws ParseException {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("CREAR RESERVA");
+        System.out.print("Ingrese el tamaño del grupo de personas: ");
+        int grupoPersonas = lector.nextInt();
+        lector.nextLine(); // Limpiar el buffer
+
+        System.out.println("Atracciones disponibles:");
+        for (int i = 0; i < atracciones.size(); i++) {
+            System.out.println((i + 1) + ". " + atracciones.get(i).getNombreAtraccion() + " (Capacidad: " + atracciones.get(i).getCapacidad() + ")");
+        }
+
+        System.out.print("Ingrese el número de la atracción elegida: ");
+        int indiceAtraccion = lector.nextInt();
+        lector.nextLine();
+
+        if (indiceAtraccion >= 1 && indiceAtraccion <= atracciones.size()) {
+            Atracciones atraccionElegida = atracciones.get(indiceAtraccion - 1);
+
+            if (grupoPersonas <= atraccionElegida.getCapacidad()) {
+                System.out.print("Ingrese la fecha y hora de la reserva (ej. dd-MM-yyyy HH:mm): ");
+                String fechaHoraString = lector.nextLine();
+                Date fechaHora = new SimpleDateFormat("dd-MM-yyyy HH:mm").parse(fechaHoraString);
+
+                Reserva nuevaReserva = new Reserva(grupoPersonas, atraccionElegida, fechaHora);
+                reservas.add(nuevaReserva);
+
+                atraccionElegida.incrementarPopularidad();
+
+                System.out.println("Reserva creada exitosamente.");
+            } else {
+                System.out.println("La atracción no tiene suficiente capacidad.");
+            }
+        } else {
+            System.out.println("Opción inválida.");
+        }
+
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    public void listarReservas() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("LISTA DE RESERVAS");
+
+        if (reservas.isEmpty()) {
+            System.out.println("No hay reservas registradas.");
+        } else {
+            for (Reserva reserva : reservas) {
+                reserva.mostrarReserva();
+            }
+        }
+
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    public void mostrarReservasPorDia() throws ParseException {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("MOSTRAR RESERVAS PARA UN DÍA ESPECÍFICO");
+        System.out.print("Ingrese la fecha (ej. dd-MM-yyyy): ");
+        String fechaString = lector.nextLine();
+        Date fechaBuscada = new SimpleDateFormat("dd-MM-yyyy").parse(fechaString);
+
+        System.out.println("Reservas para el " + fechaString + ":");
+        for (Reserva reserva : reservas) {
+            if (new SimpleDateFormat("dd-MM-yyyy").format(reserva.getFechaHora()).equals(fechaString)) {
+                reserva.mostrarReserva();
+            }
+        }
+
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    public void eliminarReserva() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("ELIMINAR RESERVA");
+
+        if (reservas.isEmpty()) {
+            System.out.println("No hay reservas registradas.");
+        } else {
+            for (int i = 0; i < reservas.size(); i++) {
+                System.out.println((i + 1) + ". ");
+                reservas.get(i).mostrarReserva();
+            }
+
+            System.out.print("Ingrese el número de la reserva a eliminar: ");
+            int indiceReserva = lector.nextInt();
+            lector.nextLine();
+
+            if (indiceReserva >= 1 && indiceReserva <= reservas.size()) {
+                reservas.remove(indiceReserva - 1);
+                System.out.println("Reserva eliminada exitosamente.");
+            } else {
+                System.out.println("Opción inválida.");
+            }
+        }
+
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+}
