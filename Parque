@@ -1,11 +1,14 @@
+import java.util.HashMap;
+import java.util.Map;
+
 class Parque {
     private String nombreParque;
-    private ArrayList<Atracciones> listaAtracciones;
+    private Map<String, Atraccion> mapaAtracciones;
 
     // Constructor
     public Parque(String nombreParque) {
         this.nombreParque = nombreParque;
-        this.listaAtracciones = new ArrayList<>();
+        this.mapaAtracciones = new HashMap<>();
     }
 
     // Getters
@@ -13,8 +16,8 @@ class Parque {
         return nombreParque;
     }
 
-    public ArrayList<Atracciones> getListaAtracciones() {
-        return listaAtracciones;
+    public Map<String, Atraccion> getMapaAtracciones() {
+        return mapaAtracciones;
     }
 
     // Setters
@@ -23,14 +26,15 @@ class Parque {
     }
 
     // Métodos
-    public void agregarAtraccion(Atracciones atraccion) {
-        listaAtracciones.add(atraccion);
+    public void agregarAtraccion(Atraccion atraccion) {
+        mapaAtracciones.put(atraccion.getNombreAtraccion(), atraccion);
     }
 
     public void mostrarAtracciones() {
         System.out.println("Atracciones en el parque " + nombreParque + ":");
-        for (Atracciones atraccion : listaAtracciones) {
+        for (Atraccion atraccion : mapaAtracciones.values()) {
             atraccion.mostrarAtraccion();
         }
     }
+
 }
