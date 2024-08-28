@@ -29,8 +29,16 @@ public class Atracciones {
   }
 
 
-  //Metodos
-  public void mostrarAtraccion() {
-    System.out.println("Nombre: [" + nombreAtraccion+"] Capacidad: [" + capacidad+" personas]");
-  }
+  // Sobrecarga de métodos
+    public void mostrarAtraccion() {
+        System.out.println("Nombre: [" + nombreAtraccion + "] Capacidad: [" + capacidad + " personas]");
+    }
+
+    public void mostrarAtraccion(boolean mostrarCapacidad) {
+        if (mostrarCapacidad) {
+            mostrarAtraccion();
+        } else {
+            System.out.println("Nombre: [" + nombreAtraccion + "]");
+        }
+    }
 }
