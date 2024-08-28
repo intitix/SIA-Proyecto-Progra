@@ -1,0 +1,36 @@
+class Parque {
+    private String nombreParque;
+    private ArrayList<Atracciones> listaAtracciones;
+
+    // Constructor
+    public Parque(String nombreParque) {
+        this.nombreParque = nombreParque;
+        this.listaAtracciones = new ArrayList<>();
+    }
+
+    // Getters
+    public String getNombreParque() {
+        return nombreParque;
+    }
+
+    public ArrayList<Atracciones> getListaAtracciones() {
+        return listaAtracciones;
+    }
+
+    // Setters
+    public void setNombreParque(String nombreParque) {
+        this.nombreParque = nombreParque;
+    }
+
+    // Métodos
+    public void agregarAtraccion(Atracciones atraccion) {
+        listaAtracciones.add(atraccion);
+    }
+
+    public void mostrarAtracciones() {
+        System.out.println("Atracciones en el parque " + nombreParque + ":");
+        for (Atracciones atraccion : listaAtracciones) {
+            atraccion.mostrarAtraccion();
+        }
+    }
+}
