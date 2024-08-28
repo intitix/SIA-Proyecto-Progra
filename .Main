@@ -14,7 +14,10 @@ public class Main {
     HashMap<String, Atraccion> atracciones = new HashMap<>();
     atracciones.put("Montania rusa", new Atraccion("Montania rusa", 30));
     atracciones.put("Carrusel", new Atraccion("Carrusel", 20));
-    
+
+    //Inicialización de la Lista de Reservas
+    List<Reserva> reservas = new ArrayList<>();
+
     //DEFINIR LECTOR
     Scanner lector = new Scanner(System.in);
     
@@ -170,11 +173,14 @@ public class Main {
 
       else if (opcion == 2) {
         System.out.println("Entrando en el gestor de reservas... ");
-        }
+      }
 
       else if (opcion == 3) {
-        System.out.println("Entrando en el gestor de estadísticas... ");
-        }
+        System.out.println("Entrando en el gestor de estadísticas...");
+        GestorReservas gestorReservas = new GestorReservas(reservas, new ArrayList<>(atraccion.values()), lector);
+        gestorReservas.mostrarEstadisticas();
+      }
+
       
       
       else if (opcion == 4) { //MODIFICAR HORARIOS
