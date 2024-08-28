@@ -4,7 +4,7 @@ public class Atraccion {
 
 
   //Constructores
-  public Atracciones(String nombreAtraccion, int capacidad) {
+  public Atraccion(String nombreAtraccion, int capacidad) {
     this.nombreAtraccion = nombreAtraccion;
     this.capacidad = capacidad;
   }
