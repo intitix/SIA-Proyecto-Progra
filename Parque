@@ -2,14 +2,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Parque {
-    private String nombreParque;
-    private Map<String, Atraccion> mapaAtracciones;
 
-    // Constructor
-    public Parque(String nombreParque) {
+    
+    private String nombreParque;
+
+    
+    private int horaApertura;
+    private int horaCierre;
+    private Map<String, Atraccion> mapaAtracciones;
+    
+    // Constructores
+    public Parque(String nombreParque, Map<String, Atraccion> mapaAtracciones, int horaApertura, int horaCierre) {
         this.nombreParque = nombreParque;
-        this.mapaAtracciones = new HashMap<>();
+        this.mapaAtracciones = mapaAtracciones;
+        this.horaApertura = horaApertura;
+        this.horaCierre = horaCierre;
     }
+    
+    
+    public Parque(String nombreParque, int horaApertura, int horaCierre) {
+        this.nombreParque = nombreParque;
+        this.horaApertura = horaApertura;
+        this.horaCierre = horaCierre;
+    }
+
 
     // Getters
     public String getNombreParque() {
@@ -19,10 +35,26 @@ class Parque {
     public Map<String, Atraccion> getMapaAtracciones() {
         return mapaAtracciones;
     }
+    
+    public int getHoraApertura() {
+        return horaApertura;
+    }
+
+    public int getHoraCierre() {
+        return horaCierre;
+    }
 
     // Setters
     public void setNombreParque(String nombreParque) {
         this.nombreParque = nombreParque;
+    }
+    
+    public void setHoraApertura(int horaApertura) {
+        this.horaApertura = horaApertura;
+    }
+
+    public void setHoraCierre(int horaCierre) {
+        this.horaCierre = horaCierre;
     }
 
     // Métodos
@@ -37,4 +69,32 @@ class Parque {
         }
     }
 
+    public Atraccion buscarAtraccion(String nombre) {
+        return mapaAtracciones.get(nombre);
+    }
+
+    public void eliminarAtraccion(String nombre) {
+        mapaAtracciones.remove(nombre);
+    }
+    
+    // Sobrecarga de métodos
+
+    // Mostrar solo el horario del parque
+    public void mostrarInfo() {
+        System.out.println("Horario de apertura: " + horaApertura + ":00");
+        System.out.println("Horario de cierre: " + horaCierre + ":00");
+    }
+
+    // Mostrar toda la información del parque (excepto el mapa de atracciones)
+    public void mostrarInfo(boolean mostrarTodo) {
+        if (mostrarTodo) {
+            System.out.println("BIENVENIDO A " + nombreParque);
+            System.out.println("Horario de apertura: " + horaApertura + ":00");
+            System.out.println("Horario de cierre: " + horaCierre + ":00");
+            System.out.println();
+        } else {
+            mostrarInfo(); // Llamar al método que muestra solo el horario
+        }
+    }
 }
+    
