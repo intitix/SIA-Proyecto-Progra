@@ -1,4 +1,4 @@
-public class Atracciones {
+public class Atraccion {
   private String nombreAtraccion;
   private int capacidad;
 
