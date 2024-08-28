@@ -4,6 +4,8 @@ import java.util.ArrayList;
 public class Main {
   public static void main(String[] args) {
 
+    //PARQUE
+    Parque parqueCentral = new Parque("nombre a elegir");
 
     //DATOS PRECARGADOS
     //ATRACCIONES
