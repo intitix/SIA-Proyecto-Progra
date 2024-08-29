@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class GestorReservas {
     private List<Reserva> reservas;
-    private List<Atracciones> atracciones;
+    private List<Atraccion> atraccion;
     private Scanner lector;
 
     public GestorReservas(List<Reserva> reservas, List<Atracciones> atracciones, Scanner lector) {
