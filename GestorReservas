@@ -2,7 +2,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class GestorReservas {
@@ -12,7 +14,7 @@ public class GestorReservas {
 
     public GestorReservas(List<Reserva> reservas, List<Atraccion> atracciones, Scanner lector) {
         this.reservas = reservas;
-        this.atracciones = atracciones;
+        this.atraccion = atracciones;
         this.lector = lector;
     }
 
@@ -25,16 +27,16 @@ public class GestorReservas {
         lector.nextLine(); // Limpiar el buffer
 
         System.out.println("Atracciones disponibles:");
-        for (int i = 0; i < atracciones.size(); i++) {
-            System.out.println((i + 1) + ". " + atracciones.get(i).getNombreAtraccion() + " (Capacidad: " + atracciones.get(i).getCapacidad() + ")");
+        for (int i = 0; i < atraccion.size(); i++) {
+            System.out.println((i + 1) + ". " + atraccion.get(i).getNombreAtraccion() + " (Capacidad: " + atraccion5.get(i).getCapacidad() + ")");
         }
 
         System.out.print("Ingrese el número de la atracción elegida: ");
         int indiceAtraccion = lector.nextInt();
         lector.nextLine();
 
-        if (indiceAtraccion >= 1 && indiceAtraccion <= atracciones.size()) {
-            Atraccion atraccionElegida = atracciones.get(indiceAtraccion - 1);
+        if (indiceAtraccion >= 1 && indiceAtraccion <= atraccion.size()) {
+            Atraccion atraccionElegida = atraccion.get(indiceAtraccion - 1);
 
             if (grupoPersonas <= atraccionElegida.getCapacidad()) {
                 System.out.print("Ingrese la fecha y hora de la reserva (ej. dd-MM-yyyy HH:mm): ");
