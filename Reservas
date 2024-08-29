@@ -28,7 +28,11 @@ public class Reserva {
 
     // Setters
     public void setGrupoPersonas(int grupoPersonas) {
-        this.grupoPersonas = grupoPersonas;
+        if (grupoPersonas > 0) {
+            this.grupoPersonas = grupoPersonas;
+        } else {
+            throw new IllegalArgumentException("El grupo de personas debe ser mayor a 0.");
+        }
     }
 
     public void setAtraccion(Atracciones atraccion) {
