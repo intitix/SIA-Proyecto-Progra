@@ -177,7 +177,7 @@ public class Main {
 
       else if (opcion == 3) {
         System.out.println("Entrando en el gestor de estadísticas...");
-        GestorReservas gestorReservas = new GestorReservas(reservas, new ArrayList<>(atraccion.values()), lector);
+        GestorReservas gestorReservas = new GestorReservas(reservas, new ArrayList<>(atracciones.values()), lector);
         gestorReservas.mostrarEstadisticas();
       }
 
