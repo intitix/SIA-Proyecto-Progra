@@ -10,7 +10,7 @@ public class GestorReservas {
     private List<Atraccion> atraccion;
     private Scanner lector;
 
-    public GestorReservas(List<Reserva> reservas, List<Atracciones> atracciones, Scanner lector) {
+    public GestorReservas(List<Reserva> reservas, List<Atraccion> atracciones, Scanner lector) {
         this.reservas = reservas;
         this.atracciones = atracciones;
         this.lector = lector;
@@ -34,7 +34,7 @@ public class GestorReservas {
         lector.nextLine();
 
         if (indiceAtraccion >= 1 && indiceAtraccion <= atracciones.size()) {
-            Atracciones atraccionElegida = atracciones.get(indiceAtraccion - 1);
+            Atraccion atraccionElegida = atracciones.get(indiceAtraccion - 1);
 
             if (grupoPersonas <= atraccionElegida.getCapacidad()) {
                 System.out.print("Ingrese la fecha y hora de la reserva (ej. dd-MM-yyyy HH:mm): ");
