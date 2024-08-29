@@ -3,7 +3,7 @@ import java.util.Date;
 
 public class Reserva {
     private int grupoPersonas;
-    private Atracciones atraccion;
+    private Atraccion atraccion;
     private Date fechaHora;
 
     // Constructor
