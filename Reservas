@@ -7,7 +7,7 @@ public class Reserva {
     private Date fechaHora;
 
     // Constructor
-    public Reserva(int grupoPersonas, Atracciones atraccion, Date fechaHora) {
+    public Reserva(int grupoPersonas, Atraccion atraccion, Date fechaHora) {
         this.grupoPersonas = grupoPersonas;
         this.atraccion = atraccion;
         this.fechaHora = fechaHora;
@@ -18,7 +18,7 @@ public class Reserva {
         return grupoPersonas;
     }
 
-    public Atracciones getAtraccion() {
+    public Atraccion getAtraccion() {
         return atraccion;
     }
 
@@ -35,7 +35,7 @@ public class Reserva {
         }
     }
 
-    public void setAtraccion(Atracciones atraccion) {
+    public void setAtraccion(Atraccion atraccion) {
         this.atraccion = atraccion;
     }
 
