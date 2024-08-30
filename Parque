@@ -1,17 +1,21 @@
 import java.util.HashMap;
 
 public class Parque {
-    private final String nombre;
-    private final HashMap<String, Atraccion> mapaAtracciones;
+    private String nombre;
+    private HashMap<String, Atraccion> mapaAtracciones;
     private int horaApertura;
     private int horaCierre;
 
+    
+    //CONSTRUCTOR
     public Parque(String nombre, HashMap<String, Atraccion> mapaAtracciones, int horaApertura, int horaCierre) {
         this.nombre = nombre;
         this.mapaAtracciones = mapaAtracciones;
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
     }
+    
+    //GETTERS
 
     public String getNombre() {
         return nombre;
@@ -21,12 +25,30 @@ public class Parque {
         return mapaAtracciones;
     }
 
+    public int getHoraApertura() {
+        return horaApertura;
+    }
+
+    public int getHoraCierre() {
+        return horaCierre;
+    }
+    
+    //SETTERS
+    
     public void setHoraApertura(int horaApertura) {
         this.horaApertura = horaApertura;
     }
-
+    
     public void setHoraCierre(int horaCierre) {
         this.horaCierre = horaCierre;
+    }
+    
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setMapaAtracciones(HashMap<String, Atraccion> mapaAtracciones) {
+        this.mapaAtracciones = mapaAtracciones;
     }
 
     public void mostrarInfo(boolean mostrarAtracciones) {
