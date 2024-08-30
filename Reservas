@@ -1,4 +1,3 @@
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Reserva {
@@ -6,46 +5,38 @@ public class Reserva {
     private Atraccion atraccion;
     private Date fechaHora;
 
-    // Constructor
     public Reserva(int grupoPersonas, Atraccion atraccion, Date fechaHora) {
         this.grupoPersonas = grupoPersonas;
         this.atraccion = atraccion;
         this.fechaHora = fechaHora;
     }
 
-    // Getters
     public int getGrupoPersonas() {
         return grupoPersonas;
+    }
+
+    public void setGrupoPersonas(int grupoPersonas) {
+        this.grupoPersonas = grupoPersonas;
     }
 
     public Atraccion getAtraccion() {
         return atraccion;
     }
 
-    public Date getFechaHora() {
-        return fechaHora;
-    }
-
-    // Setters
-    public void setGrupoPersonas(int grupoPersonas) {
-        if (grupoPersonas > 0) {
-            this.grupoPersonas = grupoPersonas;
-        } else {
-            throw new IllegalArgumentException("El grupo de personas debe ser mayor a 0.");
-        }
-    }
-
     public void setAtraccion(Atraccion atraccion) {
         this.atraccion = atraccion;
+    }
+
+    public Date getFechaHora() {
+        return fechaHora;
     }
 
     public void setFechaHora(Date fechaHora) {
         this.fechaHora = fechaHora;
     }
 
-    // Mostrar reserva
-    public void mostrarReserva() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        System.out.println("Grupo de personas: " + grupoPersonas + ", Atracción: " + atraccion.getNombreAtraccion() + ", Fecha y hora: " + sdf.format(fechaHora));
+    @Override
+    public String toString() {
+        return "Reserva para " + grupoPersonas + " personas en la atracción " + atraccion.getNombre() + " el " + fechaHora;
     }
 }
