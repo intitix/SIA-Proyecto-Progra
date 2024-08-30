@@ -1,34 +1,41 @@
 import java.util.Date;
 
+
 public class Reserva {
     private int grupoPersonas;
     private Atraccion atraccion;
     private Date fechaHora;
 
+    
+    //Constructores
     public Reserva(int grupoPersonas, Atraccion atraccion, Date fechaHora) {
         this.grupoPersonas = grupoPersonas;
         this.atraccion = atraccion;
         this.fechaHora = fechaHora;
     }
 
+    
+    //GETTERS
     public int getGrupoPersonas() {
         return grupoPersonas;
     }
-
+    
+    public Atraccion getAtraccion() {
+        return atraccion;
+    }
+    
+    public Date getFechaHora() {
+        return fechaHora;
+    }
+    
+    //SETTERS
+    
     public void setGrupoPersonas(int grupoPersonas) {
         this.grupoPersonas = grupoPersonas;
     }
 
-    public Atraccion getAtraccion() {
-        return atraccion;
-    }
-
     public void setAtraccion(Atraccion atraccion) {
         this.atraccion = atraccion;
-    }
-
-    public Date getFechaHora() {
-        return fechaHora;
     }
 
     public void setFechaHora(Date fechaHora) {
