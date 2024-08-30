@@ -1,101 +1,223 @@
-import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-  public static void main(String[] args) {
+    public static void main(String[] args) {
+        // Crear parque con atracciones precargadas
+        HashMap<String, Atraccion> atracciones = new HashMap<>();
+        atracciones.put("Montania rusa", new Atraccion("Montania rusa", 30));
+        atracciones.put("Carrusel", new Atraccion("Carrusel", 20));
 
-    //PARQUE
-    Parque parqueCentral = new Parque("PUCV LANDIA", 8, 18);
-    
+        Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
+        List<Reserva> reservas = new ArrayList<>();
+        Scanner lector = new Scanner(System.in);
+        
+        int opcion;
+        
+        while (true) {
+            // Limpiar pantalla
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            parqueCentral.mostrarInfo(true);
+            System.out.println("MENU");
+            System.out.println("1. Gestión de Atracciones");
+            System.out.println("2. Gestión de Reservas");
+            System.out.println("3. Gestión de Estadísticas");
+            System.out.println("4. Modificar Horarios de apertura/cierre");
+            System.out.println("5. Salir");
+            System.out.print("Escoja una opción: ");
+            opcion = lector.nextInt();
+            lector.nextLine(); // Limpiar el buffer
 
-    //DATOS PRECARGADOS
-    //ATRACCIONES
-    HashMap<String, Atraccion> atracciones = new HashMap<>();
-    atracciones.put("Montania rusa", new Atraccion("Montania rusa", 30));
-    atracciones.put("Carrusel", new Atraccion("Carrusel", 20));
+            switch (opcion) {
+                case 1 -> gestionarAtracciones(parqueCentral, lector);
+                case 2 -> gestionarReservas(reservas, parqueCentral, lector);
+                case 3 -> mostrarEstadisticas(reservas, lector);
+                case 4 -> modificarHorarios(parqueCentral, lector);
+                case 5 -> {
+                    System.out.println("Saliendo...");
+                    lector.close();
+                    return;
+                }
+                default -> System.out.println("Opción inválida. Intente de nuevo.");
+            }
+        }
+    }
 
-    //Inicialización de la Lista de Reservas
-    ArrayList<Reserva> reservas = new ArrayList<>();
+    private static void gestionarAtracciones(Parque parque, Scanner lector) {
+        HashMap<String, Atraccion> atracciones = parque.getMapaAtracciones();
+        while (true) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            System.out.println("GESTOR DE ATRACCIONES");
+            System.out.println("1. Crear Atracción");
+            System.out.println("2. Lista Atracciones");
+            System.out.println("3. Modificar Atracción");
+            System.out.println("4. Buscar Atracciones por rango de capacidad");
+            System.out.println("5. Eliminar Atracción");
+            System.out.println("6. Volver al menú principal");
+            System.out.print("Escoja una opción: ");
+            int opcion = lector.nextInt();
+            lector.nextLine(); // Limpiar el buffer
 
-    //DEFINIR LECTOR
-    Scanner lector = new Scanner(System.in);
-    
-    int opcion = 0;
-    
-    //MENU PRINCIPAL DE OPCIONES
-    while (true) {
-      //LIMPIAR PANTALLA
-      System.out.print("\033[H\033[2J");
-      System.out.flush();
-      parqueCentral.mostrarInfo(true); //EL TRUE MOSTRARA EL NOMBRE DEL PARQUE
-      System.out.println("MENU");
-      System.out.println("");
-      System.out.println("1. Gestion de Atracciones");
-      System.out.println("2. Gestion de Reservas");
-      System.out.println("3. Gestion de Estadisticas");
-      System.out.println("4. Modificar Horarios de apertura/cierre");
-      System.out.println("5. Salir");
-      System.out.print("Escoja una opcion: ");
-      opcion = lector.nextInt();
-      lector.nextLine();  // Limpiar el buffer de entrada
-      //GESTION ATRACCIONES
-      if (opcion == 1) {  
-        System.out.println("Entrando en el gestor de atracciones... ");
-        GestorAtracciones gestorAtracciones = new GestorAtracciones(atracciones, lector);
-        gestorAtracciones.gestionar();
-      }
-      //GESTION RESERVAS
-      else if (opcion == 2) {
-        System.out.println("Entrando en el gestor de reservas... ");
-      }
-      //GESTION ESTADISTICAS
-      else if (opcion == 3) {
-        System.out.println("Entrando en el gestor de estadísticas...");
-        GestorReservas gestorReservas = new GestorReservas(reservas, new ArrayList<>(atracciones.values()), lector);
-        gestorReservas.mostrarEstadisticas();
-      }
+            switch (opcion) {
+                case 1 -> crearAtraccion(atracciones, lector);
+                case 2 -> mostrarAtracciones(atracciones);
+                case 3 -> modificarAtraccion(atracciones, lector);
+                case 4 -> buscarPorRango(atracciones, lector);
+                case 5 -> eliminarAtraccion(atracciones, lector);
+                case 6 -> {
+                    return;
+                }
+                default -> System.out.println("Opción inválida. Intente de nuevo.");
+            }
+        }
+    }
 
-      
-      
-      else if (opcion == 4) { //MODIFICAR HORARIOS
+    private static void gestionarReservas(List<Reserva> reservas, Parque parque, Scanner lector) {
+        GestorReservas gestor = new GestorReservas(reservas, new ArrayList<>(parque.getMapaAtracciones().values()), lector);
+        try {
+            gestor.gestionarReservas();
+        } catch (ParseException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void mostrarEstadisticas(List<Reserva> reservas, Scanner lector) {
+    GestorReservas gestor = new GestorReservas(reservas, new ArrayList<>(), lector);
+    gestor.mostrarEstadisticas();
+    System.out.println("Presione Enter para continuar...");
+    lector.nextLine(); // Esperar a que el usuario presione Enter
+}
+
+    private static void modificarHorarios(Parque parque, Scanner lector) {
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println("MODIFICAR HORARIOS");
-        System.out.println("");
+        parque.mostrarInfo(false); // Mostrar solo el horario actual
 
-        // Mostrar el horario actual
-        parqueCentral.mostrarInfo(false); // Mostrar solo el horario actual
-
-        // Solicitar nuevo horario de apertura
         System.out.print("Ingrese la nueva hora de apertura (0-23): ");
         int nuevaHoraApertura = lector.nextInt();
         lector.nextLine(); // Limpiar el buffer
 
-        // Solicitar nuevo horario de cierre
         System.out.print("Ingrese la nueva hora de cierre (0-23): ");
         int nuevaHoraCierre = lector.nextInt();
         lector.nextLine(); // Limpiar el buffer
 
-        // Actualizar horarios en el objeto Parque
-        parqueCentral.setHoraApertura(nuevaHoraApertura);
-        parqueCentral.setHoraCierre(nuevaHoraCierre);
-
-        // Confirmar la modificación
-        System.out.println("Horario modificado exitosamente.");
+        if (nuevaHoraApertura >= 0 && nuevaHoraApertura <= 23 && nuevaHoraCierre >= 0 && nuevaHoraCierre <= 23 && nuevaHoraApertura < nuevaHoraCierre) {
+            parque.setHoraApertura(nuevaHoraApertura);
+            parque.setHoraCierre(nuevaHoraCierre);
+            System.out.println("Horario modificado exitosamente.");
+        } else {
+            System.out.println("Horarios inválidos.");
+        }
         System.out.println("Presione Enter para continuar...");
         lector.nextLine();
-}
-      else if (opcion == 5) {
-        System.out.println("Saliendo... ");
-        break;
-        }
+    }
 
-      System.out.print("\033[H\033[2J");
-      System.out.flush();
-      }
-      
-    lector.close();
-    
-  }
+    private static void crearAtraccion(HashMap<String, Atraccion> atracciones, Scanner lector) {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("CREANDO ATRACCIÓN");
+        System.out.print("Ingrese el nombre de la nueva atracción: ");
+        String nombre = lector.nextLine();
+        System.out.print("Ingrese la capacidad de la nueva atracción: ");
+        int capacidad = lector.nextInt();
+        lector.nextLine();
+        atracciones.put(nombre, new Atraccion(nombre, capacidad));
+        System.out.println("Atracción creada exitosamente.");
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    private static void mostrarAtracciones(HashMap<String, Atraccion> atracciones) {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("Lista de atracciones:");
+        for (Atraccion atraccion : atracciones.values()) {
+            atraccion.mostrarAtraccion();
+        }
+        System.out.println("Presione Enter para continuar...");
+    }
+
+    private static void modificarAtraccion(HashMap<String, Atraccion> atracciones, Scanner lector) {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("BUSCAR Y MODIFICAR ATRACCIÓN");
+        System.out.print("Ingrese el nombre de la atracción que desea buscar: ");
+        String nombre = lector.nextLine();
+
+        if (atracciones.containsKey(nombre)) {
+            Atraccion atraccion = atracciones.get(nombre);
+            atraccion.mostrarAtraccion();
+            System.out.println("¿Desea modificar esta atracción? (s/n)");
+            String respuesta = lector.nextLine();
+            if (respuesta.equalsIgnoreCase("s")) {
+                System.out.print("Ingrese el nuevo nombre de la atracción (deje en blanco para mantener el actual): ");
+                String nuevoNombre = lector.nextLine();
+                if (!nuevoNombre.isEmpty()) {
+                    atracciones.remove(nombre);
+                    atraccion.setNombreAtraccion(nuevoNombre);
+                    atracciones.put(nuevoNombre, atraccion);
+                }
+                System.out.print("Ingrese la nueva capacidad de la atracción (deje en blanco para mantener la actual): ");
+                String nuevaCapacidad = lector.nextLine();
+                if (!nuevaCapacidad.isEmpty()) {
+                    atraccion.setCapacidad(Integer.parseInt(nuevaCapacidad));
+                }
+                System.out.println("Atracción modificada exitosamente.");
+            }
+        } else {
+            System.out.println("Atracción no encontrada.");
+        }
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    private static void buscarPorRango(HashMap<String, Atraccion> atracciones, Scanner lector) {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("MOSTRAR ATRACCIONES POR RANGO DE CAPACIDAD");
+        System.out.print("Ingrese la capacidad mínima: ");
+        int capacidadMin = lector.nextInt();
+        System.out.print("Ingrese la capacidad máxima: ");
+        int capacidadMax = lector.nextInt();
+        lector.nextLine(); // Limpiar el buffer
+
+        System.out.println("Atracciones en el rango de capacidad:");
+        for (Atraccion atraccion : atracciones.values()) {
+            if (atraccion.getCapacidad() >= capacidadMin && atraccion.getCapacidad() <= capacidadMax) {
+                atraccion.mostrarAtraccion();
+            }
+        }
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    private static void eliminarAtraccion(HashMap<String, Atraccion> atracciones, Scanner lector) {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("ELIMINAR ATRACCIÓN");
+        int i = 1;
+        for (String nombre : atracciones.keySet()) {
+            System.out.println(i + ". " + nombre);
+            i++;
+        }
+        System.out.print("Ingrese el número de la atracción a eliminar: ");
+        int opcion = lector.nextInt();
+        lector.nextLine(); // Limpiar el buffer
+
+        if (opcion > 0 && opcion <= atracciones.size()) {
+            String nombre = (String) atracciones.keySet().toArray()[opcion - 1];
+            atracciones.remove(nombre);
+            System.out.println("Atracción eliminada exitosamente.");
+        } else {
+            System.out.println("Opción inválida.");
+        }
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
 }
