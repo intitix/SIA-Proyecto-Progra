@@ -45,11 +45,11 @@ public class Main {
         GestorAtracciones gestorAtracciones = new GestorAtracciones(atracciones, lector);
         gestorAtracciones.gestionar();
       }
-
+      //GESTION RESERVAS
       else if (opcion == 2) {
         System.out.println("Entrando en el gestor de reservas... ");
       }
-
+      //GESTION ESTADISTICAS
       else if (opcion == 3) {
         System.out.println("Entrando en el gestor de estadísticas...");
         GestorReservas gestorReservas = new GestorReservas(reservas, new ArrayList<>(atracciones.values()), lector);
