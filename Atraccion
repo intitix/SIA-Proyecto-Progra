@@ -2,32 +2,41 @@ public class Atraccion {
     private String nombre;
     private int capacidad;
 
+    
+    //CONSTRUCTOR
     public Atraccion(String nombre, int capacidad) {
         this.nombre = nombre;
         this.capacidad = capacidad;
     }
 
+    
+    //GETTERS
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public int getCapacidad() {
         return capacidad;
+    }
+    
+
+    
+    //SETTERS
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad;
     }
 
+    //Metodos
     public void mostrarAtraccion() {
         System.out.println("Nombre: " + nombre + ", Capacidad: " + capacidad);
     }
 
     void setNombreAtraccion(String nuevoNombre) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 }
+
