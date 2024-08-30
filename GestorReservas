@@ -17,7 +17,7 @@ public class GestorReservas {
         this.lector = lector;
     }
 
-    public void gestionarReservas() throws ParseException {
+    public void gestionar() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         while (true) {
             System.out.print("\033[H\033[2J");
@@ -57,10 +57,15 @@ public class GestorReservas {
         }
 
         if (atraccion != null) {
-            System.out.print("Ingrese el grupo de personas: ");
-            int grupoPersonas = lector.nextInt();
-            lector.nextLine(); // Limpiar el buffer
+               System.out.print("Ingrese el grupo de personas: ");
+               int grupoPersonas = lector.nextInt();
+               lector.nextLine(); // Limpiar el buffer
 
+               // Validar que el tamaño del grupo no supere la capacidad de la atracción
+               if (grupoPersonas > atraccion.getCapacidad()) {
+                   System.out.println("Error: El grupo de personas supera la capacidad de la atracción.");
+                   return;
+               }
             System.out.print("Ingrese la fecha y hora de la reserva (dd/MM/yyyy HH:mm): ");
             String fechaHoraStr = lector.nextLine();
             Date fechaHora = sdf.parse(fechaHoraStr);
