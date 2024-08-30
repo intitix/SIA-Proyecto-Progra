@@ -2,8 +2,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class GestorAtracciones {
-    private HashMap<String, Atraccion> atracciones;
-    private Scanner lector;
+    private final HashMap<String, Atraccion> atracciones;
+    private final Scanner lector;
 
     public GestorAtracciones(HashMap<String, Atraccion> atracciones, Scanner lector) {
         this.atracciones = atracciones;
@@ -12,6 +12,7 @@ public class GestorAtracciones {
 
     public void gestionar() {
         int opcion = 0;
+        OUTER:
         while (true) {
             System.out.print("\033[H\033[2J");
             System.out.flush();
@@ -23,23 +24,26 @@ public class GestorAtracciones {
             System.out.println("4. Buscar Atracciones por rango de capacidad");
             System.out.println("5. Eliminar Atraccion");
             System.out.println("6. Volver al menu principal");
-
             System.out.print("Escoja una opcion: ");
             opcion = lector.nextInt();
             lector.nextLine();
-
-            if (opcion == 1) { // AGREGAR ATRACCION
-                crearAtraccion();
-            } else if (opcion == 2) { // MOSTRAR ATRACCIONES
-                mostrarAtracciones();
-            } else if (opcion == 3) { // BUSCAR Y MODIFICAR ATRACCION
-                modificarAtraccion();
-            } else if (opcion == 4) { // MOSTRAR ATRACCIONES POR RANGO
-                mostrarAtraccionesPorRango();
-            } else if (opcion == 5) { // ELIMINAR ATRACCION
-                eliminarAtraccion();
-            } else if (opcion == 6) { // VOLVER AL MENU
-                break;
+            switch (opcion) {
+                case 1 -> // AGREGAR ATRACCION
+                    crearAtraccion();
+                case 2 -> // MOSTRAR ATRACCIONES
+                    mostrarAtracciones();
+                case 3 -> // BUSCAR Y MODIFICAR ATRACCION
+                    modificarAtraccion();
+                case 4 -> // MOSTRAR ATRACCIONES POR RANGO
+                    mostrarAtraccionesPorRango();
+                case 5 -> // ELIMINAR ATRACCION
+                    eliminarAtraccion();
+                case 6 -> {
+                    // VOLVER AL MENU
+                    break OUTER;
+                }
+                default -> {
+                }
             }
         }
     }
