@@ -1,0 +1,99 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class GestorParque {
+    private final Parque parque;
+    private final Scanner lector;
+
+    public GestorParque(Parque parque, Scanner lector) {
+        this.parque = parque;
+        this.lector = lector;
+    }
+
+    public void gestionarParque() {
+        while (true) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+            System.out.println("GESTIÓN DEL PARQUE");
+            System.out.println("1. Cambiar nombre del parque");
+            System.out.println("2. Modificar horario de apertura y cierre");
+            System.out.println("3. Generar reporte");
+            System.out.println("4. Volver al menú principal");
+            System.out.print("Escoja una opción: ");
+            int opcion = lector.nextInt();
+            lector.nextLine(); // Limpiar el buffer
+
+            switch (opcion) {
+                case 1 -> cambiarNombreParque();
+                case 2 -> modificarHorario();
+                case 3 -> generarReporte();
+                case 4 -> {
+                    return; // Volver al menú principal
+                }
+                default -> System.out.println("Opción inválida. Intente de nuevo.");
+            }
+        }
+    }
+
+    private void cambiarNombreParque() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("CAMBIAR NOMBRE DEL PARQUE");
+        System.out.print("Ingrese el nuevo nombre del parque: ");
+        String nuevoNombre = lector.nextLine();
+        parque.setNombre(nuevoNombre);
+        System.out.println("Nombre del parque cambiado exitosamente.");
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    private void modificarHorario() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("MODIFICAR HORARIO");
+        System.out.print("Ingrese la nueva hora de apertura (0-23): ");
+        int nuevaHoraApertura = lector.nextInt();
+        System.out.print("Ingrese la nueva hora de cierre (0-23): ");
+        int nuevaHoraCierre = lector.nextInt();
+        lector.nextLine(); // Limpiar el buffer
+
+        if (nuevaHoraApertura < 0 || nuevaHoraApertura > 23 || nuevaHoraCierre < 0 || nuevaHoraCierre > 23) {
+            System.out.println("Horas inválidas. Deben estar entre 0 y 23.");
+        } else {
+            parque.setHoraApertura(nuevaHoraApertura);
+            parque.setHoraCierre(nuevaHoraCierre);
+            System.out.println("Horario modificado exitosamente.");
+        }
+
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+
+    private void generarReporte() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("REPORTE DEL PARQUE");
+
+        // Nombre del parque
+        System.out.println("Nombre del Parque: " + parque.getNombre());
+
+        // Capacidad máxima
+        int capacidadMaxima = parque.getMapaAtracciones().values().stream()
+                                    .mapToInt(Atraccion::getCapacidad)
+                                    .sum();
+        System.out.println("Capacidad Máxima: " + capacidadMaxima);
+
+        // Número de atracciones
+        int numeroAtracciones = parque.getMapaAtracciones().size();
+        System.out.println("Número de Atracciones: " + numeroAtracciones);
+
+        // Número de reservas
+        // Suponiendo que las reservas están gestionadas en otro lugar
+        // Aquí deberías pasar una lista de reservas o un gestor de reservas
+        int numeroReservas = 0; // Esto debe ser actualizado según la gestión de reservas real
+        System.out.println("Número de Reservas Actuales: " + numeroReservas);
+
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+}
