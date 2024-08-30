@@ -1,53 +1,33 @@
 public class Atraccion {
-  private String nombreAtraccion;
-  private int capacidad;
-  private int popularidad;
+    private String nombre;
+    private int capacidad;
 
-  //Constructores
-  public Atraccion(String nombreAtraccion, int capacidad) {
-    this.nombreAtraccion = nombreAtraccion;
-    this.capacidad = capacidad;
-    this.popularidad = 0;
-  }
-
-  //Getters
-  public String getNombreAtraccion() {
-    return nombreAtraccion;
-  }
-  public int getCapacidad() {
-    return capacidad;
-  }
-
-
-  //Setters
-  
-  public void setNombreAtraccion(String nombreAtraccion) {
-    this.nombreAtraccion = nombreAtraccion;
-  }
-
-  public void setCapacidad(int capacidad) {
-    this.capacidad = capacidad;
-  }
-
-  // Método para incrementar la popularidad
-    public void incrementarPopularidad() {
-        this.popularidad++;
+    public Atraccion(String nombre, int capacidad) {
+        this.nombre = nombre;
+        this.capacidad = capacidad;
     }
 
-    public int getPopularidad() {
-        return this.popularidad;
+    public String getNombre() {
+        return nombre;
     }
 
-  // Sobrecarga de métodos
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
     public void mostrarAtraccion() {
-        System.out.println("Nombre: [" + nombreAtraccion + "] Capacidad: [" + capacidad + " personas]");
+        System.out.println("Nombre: " + nombre + ", Capacidad: " + capacidad);
     }
 
-    public void mostrarAtraccion(boolean mostrarCapacidad) {
-        if (mostrarCapacidad) {
-            mostrarAtraccion();
-        } else {
-            System.out.println("Nombre: [" + nombreAtraccion + "]");
-        }
+    void setNombreAtraccion(String nuevoNombre) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
