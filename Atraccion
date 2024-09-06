@@ -1,14 +1,14 @@
 public class Atraccion {
     private String nombre;
     private int capacidad;
-
+    private int duracion;
     
     //CONSTRUCTOR
     public Atraccion(String nombre, int capacidad) {
         this.nombre = nombre;
         this.capacidad = capacidad;
+        this.duracion = duracion;
     }
-
     
     //GETTERS
     public String getNombre() {
@@ -18,8 +18,10 @@ public class Atraccion {
     public int getCapacidad() {
         return capacidad;
     }
-    
 
+    public int getDuracion() {
+        return duracion;
+    }
     
     //SETTERS
     public void setNombre(String nombre) {
@@ -30,13 +32,22 @@ public class Atraccion {
         this.capacidad = capacidad;
     }
 
-    //Metodos
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+
+    //Sobrecarga de métodos
     public void mostrarAtraccion() {
-        System.out.println("Nombre: " + nombre + ", Capacidad: " + capacidad);
+        System.out.println("・" + nombre);
+    }
+    
+    public void mostrarAtraccion(boolean conDetalles) {
+        if (conDetalles) {
+            System.out.println("Nombre: " + nombre + ", Capacidad: " + capacidad + ", Duración: " + duracion + " minutos");
+        }
     }
 
     void setNombreAtraccion(String nuevoNombre) {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
 }
-
