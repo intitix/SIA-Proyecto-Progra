@@ -69,9 +69,16 @@ public class GestorAtracciones {
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println("Lista de atracciones:");
-        System.out.println();
         for (Atraccion atraccion : atracciones.values()) {
             atraccion.mostrarAtraccion();  // Llama al método mostrarAtraccion
+        }
+        System.out.println();
+        System.out.println("¿Desea ver detalles de las atracciones? (s/n)");
+        String respuesta = lector.nextLine();
+        System.out.println();
+        boolean mostrarDetalles = respuesta.equalsIgnoreCase("s");
+        for (Atraccion atraccion : atracciones.values()) {
+            atraccion.mostrarAtraccion(mostrarDetalles);  // Llama al método con parámetro
         }
         System.out.println("");
         System.out.println("Presione Enter para continuar...");
@@ -84,11 +91,11 @@ public class GestorAtracciones {
         System.out.println("BUSCAR Y MODIFICAR ATRACCION");
         System.out.print("Ingrese el nombre de la atraccion que desea buscar: ");
         String nombreBusqueda = lector.nextLine();
-        
+    
         if (atracciones.containsKey(nombreBusqueda)) {
             Atraccion atraccion = atracciones.get(nombreBusqueda);
             System.out.println("Atraccion encontrada:");
-            atraccion.mostrarAtraccion();
+            atraccion.mostrarAtraccion(true); // Muestra detalles, incluyendo duración
 
             System.out.println("¿Desea modificar esta atraccion? (s/n)");
             String respuesta = lector.nextLine();
@@ -97,7 +104,7 @@ public class GestorAtracciones {
                 String nuevoNombre = lector.nextLine();
                 if (!nuevoNombre.isEmpty()) {
                     atracciones.remove(nombreBusqueda); // Elimina la entrada antigua
-                    atraccion.setNombreAtraccion(nuevoNombre);
+                    atraccion.setNombre(nuevoNombre);
                     atracciones.put(nuevoNombre, atraccion); // Agrega la nueva entrada
                 }
 
@@ -105,6 +112,12 @@ public class GestorAtracciones {
                 String nuevaCapacidad = lector.nextLine();
                 if (!nuevaCapacidad.isEmpty()) {
                     atraccion.setCapacidad(Integer.parseInt(nuevaCapacidad));
+                }
+
+                System.out.print("Ingrese la nueva duración de la atraccion (deje en blanco para mantener la actual): ");
+                String nuevaDuracion = lector.nextLine();
+                if (!nuevaDuracion.isEmpty()) {
+                    atraccion.setDuracion(Integer.parseInt(nuevaDuracion));
                 }
 
                 System.out.println("Atraccion modificada exitosamente.");
