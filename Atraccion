@@ -4,7 +4,7 @@ public class Atraccion {
     private int duracion;
     
     //CONSTRUCTOR
-    public Atraccion(String nombre, int capacidad) {
+    public Atraccion(String nombre, int capacidad, int duracion) {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.duracion = duracion;
