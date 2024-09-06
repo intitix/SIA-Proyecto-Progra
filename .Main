@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) {
         // Crear parque con atracciones precargadas
         HashMap<String, Atraccion> atracciones = new HashMap<>();
-        atracciones.put("Montania rusa", new Atraccion("Montaña rusa", 30));
-        atracciones.put("Carrusel", new Atraccion("Carrusel", 20));
+        atracciones.put("Montania rusa", new Atraccion("Montaña rusa", 30, 15));
+        atracciones.put("Carrusel", new Atraccion("Carrusel", 20, 10));
 
         Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
         List<Reserva> reservas = new ArrayList<>();
