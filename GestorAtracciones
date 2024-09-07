@@ -57,13 +57,16 @@ public class GestorAtracciones {
         String nombreAtraccion = lector.nextLine();
         System.out.print("Ingrese la capacidad de la nueva atraccion: ");
         int capacidad = lector.nextInt();
+        System.out.print("Ingrese la duracion de la nueva atraccion (en minutos): ");
+        int duracion = lector.nextInt();
         lector.nextLine();
-        atracciones.put(nombreAtraccion, new Atraccion(nombreAtraccion, capacidad));
+        atracciones.put(nombreAtraccion, new Atraccion(nombreAtraccion, capacidad, duracion));
         System.out.println("");
         System.out.println("Atraccion creada exitosamente.");
         System.out.println("Presione Enter para continuar...");
         lector.nextLine();
     }
+
 
     private void mostrarAtracciones() {
         System.out.print("\033[H\033[2J");
