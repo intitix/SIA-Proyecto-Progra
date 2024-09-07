@@ -1,23 +1,32 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        // Crear parque con atracciones precargadas
-        HashMap<String, Atraccion> atracciones = new HashMap<>();
-        atracciones.put("Montania rusa", new Atraccion("Montaña rusa", 30, 15));
-        atracciones.put("Carrusel", new Atraccion("Carrusel", 20, 10));
 
+public class SIA_Progra_Avanzada {
+    public static void main(String[] args) throws ParseException {
+
+        //INICIALIZAR PARQUE
         Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
+       
+        //Mapa con atracciones Precargadas
+        HashMap<String, Atraccion> atracciones = new HashMap<>();
+        atracciones.put("Montania rusa", new Atraccion("Montaña rusa", 30,10));
+        atracciones.put("Carrusel", new Atraccion("Carrusel", 20,15));
+        
+        // Inicializar lista de reservas con dos reservas precargadas
         List<Reserva> reservas = new ArrayList<>();
+        // Crear dos reservas precargadas
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        reservas.add(new Reserva(4, atracciones.get("Montania rusa"), sdf.parse("10/09/2024 14:00")));
+        reservas.add(new Reserva(2, atracciones.get("Carrusel"), sdf.parse("11/09/2024 16:00")));
+        
+        
+        //Lector
         Scanner lector = new Scanner(System.in);
-        
-        
-        
-        
 
         
         int opcion;
