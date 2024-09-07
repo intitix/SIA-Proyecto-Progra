@@ -10,10 +10,10 @@ public class Main {
     public static void main(String[] args) throws ParseException {
 
         //INICIALIZAR PARQUE
+        HashMap<String, Atraccion> atracciones = new HashMap<>();
         Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
        
         //Mapa con atracciones Precargadas
-        HashMap<String, Atraccion> atracciones = new HashMap<>();
         atracciones.put("Montania rusa", new Atraccion("Montaña rusa", 30,10));
         atracciones.put("Carrusel", new Atraccion("Carrusel", 20,15));
         
