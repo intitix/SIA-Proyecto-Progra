@@ -6,4 +6,4 @@
 
 3) Seleccionar opción Open File
 
-4) Seleccionar el archivo .zip del proyecto
+4) Seleccionar el archivo .zip "ProyectoParqueAtracciones" del proyecto
