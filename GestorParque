@@ -1,12 +1,15 @@
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.List;
 
 public class GestorParque {
     private final Parque parque;
+    private final List<Reserva> reservas; // Lista de reservas
     private final Scanner lector;
 
-    public GestorParque(Parque parque, Scanner lector) {
+    public GestorParque(Parque parque, List<Reserva> reservas, Scanner lector) {
         this.parque = parque;
+        this.reservas = reservas; // Inicializar la lista de reservas
         this.lector = lector;
     }
 
@@ -20,17 +23,23 @@ public class GestorParque {
             System.out.println("3. Generar reporte");
             System.out.println("4. Volver al menú principal");
             System.out.print("Escoja una opción: ");
-            int opcion = lector.nextInt();
-            lector.nextLine(); // Limpiar el buffer
+            
+            try {
+                int opcion = lector.nextInt();
+                lector.nextLine(); // Limpiar el buffer
 
-            switch (opcion) {
-                case 1 -> cambiarNombreParque();
-                case 2 -> modificarHorario();
-                case 3 -> generarReporte();
-                case 4 -> {
-                    return; // Volver al menú principal
+                switch (opcion) {
+                    case 1 -> cambiarNombreParque();
+                    case 2 -> modificarHorario();
+                    case 3 -> generarReporte();
+                    case 4 -> {
+                        return; // Volver al menú principal
+                    }
+                    default -> System.out.println("Opción inválida. Intente de nuevo.");
                 }
-                default -> System.out.println("Opción inválida. Intente de nuevo.");
+            } catch (Exception e) {
+                System.out.println("Error: Entrada inválida. Por favor, ingrese un número.");
+                lector.nextLine(); // Limpiar el buffer de entrada
             }
         }
     }
@@ -88,10 +97,7 @@ public class GestorParque {
         System.out.println("Número de Atracciones: " + numeroAtracciones);
 
         // Número de reservas
-        // Suponiendo que las reservas están gestionadas en otro lugar
-        // Aquí deberías pasar una lista de reservas o un gestor de reservas
-        int numeroReservas = 0; // Esto debe ser actualizado según la gestión de reservas real
-        System.out.println("Número de Reservas Actuales: " + numeroReservas);
+        System.out.println("Número de Reservas Activas: " + reservas.size());
 
         System.out.println("Presione Enter para continuar...");
         lector.nextLine();
