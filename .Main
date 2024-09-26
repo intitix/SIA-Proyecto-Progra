@@ -5,29 +5,26 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class Main {
     public static void main(String[] args) throws ParseException {
 
-        //INICIALIZAR PARQUE
+        // INICIALIZAR PARQUE
         HashMap<String, Atraccion> atracciones = new HashMap<>();
         Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
-       
-        //Mapa con atracciones Precargadas
-        atracciones.put("Montania rusa", new Atraccion("Montaña rusa", 30,10));
-        atracciones.put("Carrusel", new Atraccion("Carrusel", 20,15));
+        
+        // Mapa con atracciones precargadas
+        atracciones.put("Montaña rusa", new Atraccion("Montaña rusa", 30, 10));
+        atracciones.put("Carrusel", new Atraccion("Carrusel", 20, 15));
         
         // Inicializar lista de reservas con dos reservas precargadas
         List<Reserva> reservas = new ArrayList<>();
         // Crear dos reservas precargadas
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        reservas.add(new Reserva(4, atracciones.get("Montania rusa"), sdf.parse("10/09/2024 14:00")));
+        reservas.add(new Reserva(4, atracciones.get("Montaña rusa"), sdf.parse("10/09/2024 14:00")));
         reservas.add(new Reserva(2, atracciones.get("Carrusel"), sdf.parse("11/09/2024 16:00")));
         
-        
-        //Lector
+        // Lector
         Scanner lector = new Scanner(System.in);
-
         
         int opcion;
         
@@ -42,37 +39,42 @@ public class Main {
             System.out.println("3. Gestión de Parque y Estadísticas");
             System.out.println("4. Salir");
             System.out.print("Escoja una opción: ");
-            opcion = lector.nextInt();
-            lector.nextLine(); // Limpiar el buffer
+            
+            try {
+                opcion = lector.nextInt();
+                lector.nextLine(); // Limpiar el buffer
 
-            switch (opcion) {
-                case 1 -> {
-                    // Instanciar Gestor y usar método
-                    GestorAtracciones gestor = new GestorAtracciones(atracciones, lector);
-                    gestor.gestionar();
-                }
-                case 2 -> {
-                    while (true){
-                    try {
-                        GestorReservas gestor = new GestorReservas(reservas, new ArrayList<>(atracciones.values()), lector);
+                switch (opcion) {
+                    case 1 -> {
+                        // Instanciar Gestor y usar método
+                        GestorAtracciones gestor = new GestorAtracciones(atracciones, lector);
                         gestor.gestionar();
-                        break;
-                    } catch (ParseException e) {
-                        System.out.println("Error en el formato de la fecha.");
-                        
                     }
+                    case 2 -> {
+                        while (true) {
+                            try {
+                                GestorReservas gestor = new GestorReservas(reservas, new ArrayList<>(atracciones.values()), lector);
+                                gestor.gestionar();
+                                break; // Salir del bucle interno después de gestionar reservas
+                            } catch (ParseException e) {
+                                System.out.println("Error en el formato de la fecha.");
+                            }
+                        }
                     }
+                    case 3 -> {
+                        GestorParque gestorParque = new GestorParque(parqueCentral, lector);
+                        gestorParque.gestionarParque();
+                    }
+                    case 4 -> {
+                        System.out.println("Saliendo...");
+                        lector.close();
+                        return; // Salir del programa
+                    }
+                    default -> System.out.println("Opción inválida. Intente de nuevo.");
                 }
-                case 3 -> {
-                    GestorParque gestorParque = new GestorParque(parqueCentral, lector);
-                    gestorParque.gestionarParque();
-                }
-                case 4 -> {
-                    System.out.println("Saliendo...");
-                    lector.close();
-                    return;
-                }
-                default -> System.out.println("Opción inválida. Intente de nuevo.");
+            } catch (Exception e) {
+                System.out.println("Error: Entrada inválida. Por favor, ingrese un número.");
+                lector.nextLine(); // Limpiar el buffer de entrada
             }
         }
     }
