@@ -53,7 +53,7 @@ public class Main {
                     case 2 -> {
                         while (true) {
                             try {
-                                GestorReservas gestor = new GestorReservas(reservas, new ArrayList<>(atracciones.values()), lector);
+                                GestorReservas gestor = new GestorReservas(reservas, new ArrayList<>(atracciones.values()),parqueCentral ,lector);
                                 gestor.gestionar();
                                 break; // Salir del bucle interno después de gestionar reservas
                             } catch (ParseException e) {
@@ -62,7 +62,7 @@ public class Main {
                         }
                     }
                     case 3 -> {
-                        GestorParque gestorParque = new GestorParque(parqueCentral, lector);
+                        GestorParque gestorParque = new GestorParque(parqueCentral, reservas, lector);
                         gestorParque.gestionarParque();
                     }
                     case 4 -> {
