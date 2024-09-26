@@ -11,9 +11,10 @@ public class GestorAtracciones {
     }
 
     public void gestionar() {
-        int opcion = 0;
-        OUTER:
-        while (true) {
+    int opcion;
+    OUTER:
+    while (true) {
+        try {
             System.out.print("\033[H\033[2J");
             System.out.flush();
             System.out.println("GESTOR DE ATRACCIONES");
@@ -26,46 +27,56 @@ public class GestorAtracciones {
             System.out.println("6. Volver al menu principal");
             System.out.print("Escoja una opcion: ");
             opcion = lector.nextInt();
-            lector.nextLine();
+            lector.nextLine(); // Limpiar buffer de entrada
             switch (opcion) {
-                case 1 -> // AGREGAR ATRACCION
-                    crearAtraccion();
-                case 2 -> // MOSTRAR ATRACCIONES
-                    mostrarAtracciones();
-                case 3 -> // BUSCAR Y MODIFICAR ATRACCION
-                    modificarAtraccion();
-                case 4 -> // MOSTRAR ATRACCIONES POR RANGO
-                    mostrarAtraccionesPorRango();
-                case 5 -> // ELIMINAR ATRACCION
-                    eliminarAtraccion();
+                case 1 -> crearAtraccion();
+                case 2 -> mostrarAtracciones();
+                case 3 -> modificarAtraccion();
+                case 4 -> mostrarAtraccionesPorRango();
+                case 5 -> eliminarAtraccion();
                 case 6 -> {
-                    // VOLVER AL MENU
-                    break OUTER;
+                    // Opción para volver al menú principal
+                    System.out.println("Volviendo al menú principal...");
+                    break OUTER; // Esto rompe el ciclo y vuelve al menú
                 }
-                default -> {
-                }
+                default -> System.out.println("Opción no válida. Intente nuevamente.");
             }
+        } catch (Exception e) {
+            System.out.println("Error, asegúrese de colocar los datos correctamente ");
+
+            lector.nextLine(); // Limpiar buffer de entrada
         }
     }
+}
 
     private void crearAtraccion() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        System.out.println("CREANDO ATRACCION");
-        System.out.println("");
-        System.out.print("Ingrese el nombre de la nueva atraccion: ");
-        String nombreAtraccion = lector.nextLine();
-        System.out.print("Ingrese la capacidad de la nueva atraccion: ");
-        int capacidad = lector.nextInt();
-        System.out.print("Ingrese la duracion de la nueva atraccion (en minutos): ");
-        int duracion = lector.nextInt();
-        lector.nextLine();
-        atracciones.put(nombreAtraccion, new Atraccion(nombreAtraccion, capacidad, duracion));
-        System.out.println("");
-        System.out.println("Atraccion creada exitosamente.");
-        System.out.println("Presione Enter para continuar...");
-        lector.nextLine();
-    }
+    System.out.print("\033[H\033[2J");
+    System.out.flush();
+    System.out.println("CREANDO ATRACCION");
+    System.out.println("");
+    
+    Atraccion nuevaAtraccion = new Atraccion(); // Crear la instancia vacía
+
+    System.out.print("Ingrese el nombre de la nueva atraccion: ");
+    String nombreAtraccion = lector.nextLine();
+    nuevaAtraccion.setNombre(nombreAtraccion); // Usar setter para nombre
+
+    System.out.print("Ingrese la capacidad de la nueva atraccion: ");
+    int capacidad = lector.nextInt();
+    nuevaAtraccion.setCapacidad(capacidad); // Usar setter para capacidad
+
+    System.out.print("Ingrese la duracion de la nueva atraccion (en minutos): ");
+    int duracion = lector.nextInt();
+    lector.nextLine();
+    nuevaAtraccion.setDuracion(duracion); // Usar setter para duración
+
+    atracciones.put(nombreAtraccion, nuevaAtraccion); // Añadir atracción al mapa
+
+    System.out.println("");
+    System.out.println("Atracción creada exitosamente.");
+    System.out.println("Presione Enter para continuar...");
+    lector.nextLine();
+}
 
 
     private void mostrarAtracciones() {
@@ -172,6 +183,10 @@ public class GestorAtracciones {
         } else {
             System.out.println("Atracción no encontrada.");
         }
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
+}
         System.out.println("Presione Enter para continuar...");
         lector.nextLine();
     }
