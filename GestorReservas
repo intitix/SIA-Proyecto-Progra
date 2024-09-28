@@ -26,7 +26,8 @@ public class GestorReservas {
             System.out.println("1. Crear Reserva");
             System.out.println("2. Mostrar Reservas");
             System.out.println("3. Eliminar Reserva");
-            System.out.println("4. Volver al menú principal");
+            System.out.println("4. Buscar Reservas por Día");
+            System.out.println("5. Volver al menú principal");
             System.out.print("Escoja una opción: ");
             int opcion = lector.nextInt();
             lector.nextLine(); // Limpiar el buffer
@@ -35,7 +36,8 @@ public class GestorReservas {
                 case 1 -> crearReserva(sdf);
                 case 2 -> mostrarReservas();
                 case 3 -> eliminarReserva();
-                case 4 -> {
+                case 4 -> buscarReservasPorDia();
+                case 5 -> {
                     return;
                 }
                 default -> System.out.println("Opción inválida. Intente de nuevo.");
@@ -101,6 +103,39 @@ public class GestorReservas {
             System.out.println("Reserva eliminada exitosamente.");
         } else {
             System.out.println("Reserva no encontrada.");
+        }
+    }
+
+    public void buscarReservasPorDia() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false); // Solo fechas válidas son aceptadas
+    
+        System.out.print("Ingrese el día para filtrar (dd/MM/yyyy): ");
+        String diaStr = lector.nextLine();
+
+        try {
+            // Parsear la fecha ingresada
+            Date dia = sdf.parse(diaStr);
+        
+            System.out.println("RESERVAS PARA EL DÍA " + sdf.format(dia) + ":");
+            boolean hayReservas = false;
+        
+            for (Reserva reserva : reservas) {
+                // Comparar solo la parte de la fecha (sin la hora)
+                if (sdf.format(reserva.getFechaHora()).equals(sdf.format(dia))) {
+                    System.out.println(reserva);
+                    hayReservas = true;
+                }
+            }
+
+            // Mostrar mensaje si no hay reservas
+            if (!hayReservas) {
+                System.out.println("No hay reservas para este día.");
+            }
+        
+        } catch (ParseException e) {
+            // Manejar el error si el formato de la fecha es incorrecto o es inválida
+            System.out.println("Formato de fecha incorrecto. Por favor, use el formato dd/MM/yyyy.");
         }
     }
 
