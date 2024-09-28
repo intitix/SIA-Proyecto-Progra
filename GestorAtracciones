@@ -187,7 +187,3 @@ public class GestorAtracciones {
         lector.nextLine();
     }
 }
-        System.out.println("Presione Enter para continuar...");
-        lector.nextLine();
-    }
-}
