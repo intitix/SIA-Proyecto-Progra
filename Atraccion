@@ -1,22 +1,28 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Atraccion {
     private String nombre;
     private int capacidad;
     private int duracion;
-    
-    //CONSTRUCTOR
+    private List<Reserva> ListaReservas;
+
+    // CONSTRUCTOR
     public Atraccion(String nombre, int capacidad, int duracion) {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.duracion = duracion;
+        this.ListaReservas = new ArrayList<>(); // Inicializamos la lista de reservas
     }
-    
+
     public Atraccion() {
         this.nombre = "";
         this.capacidad = 0;
         this.duracion = 0;
+        this.ListaReservas = new ArrayList<>(); // Inicializamos la lista de reservas
     }
-    
-    //GETTERS
+
+    // GETTERS
     public String getNombre() {
         return nombre;
     }
@@ -28,8 +34,12 @@ public class Atraccion {
     public int getDuracion() {
         return duracion;
     }
-    
-    //SETTERS
+
+    public List<Reserva> getReservas() {
+        return new ArrayList<>(ListaReservas); // Devolvemos una copia de la lista
+    }
+
+    // SETTERS
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -42,15 +52,35 @@ public class Atraccion {
         this.duracion = duracion;
     }
 
-    //Sobrecarga de métodos
-    public void mostrarAtraccion() {
-        System.out.println("・" + nombre);
+    // Métodos para gestionar las reservas
+    public void agregarReserva(Reserva reserva) {
+        ListaReservas.add(reserva);
     }
-    
+
+    public void eliminarReserva(Reserva reserva) {
+        ListaReservas.remove(reserva);
+    }
+
+    public void mostrarReservas() {
+        if (ListaReservas.isEmpty()) {
+            System.out.println("No hay reservas para esta atracción.");
+        } else {
+            for (Reserva reserva : ListaReservas) {
+                System.out.println(reserva); // Supone que Reserva tiene un método toString()
+            }
+        }
+    }
+
+    // Sobrecarga de métodos
+    public void mostrarAtraccion() {
+        System.out.println("-" + nombre);
+    }
+
     public void mostrarAtraccion(boolean conDetalles) {
         if (conDetalles) {
             System.out.println("Nombre: " + nombre + ", Capacidad: " + capacidad + ", Duración: " + duracion + " minutos");
         }
     }
+
 
 }
