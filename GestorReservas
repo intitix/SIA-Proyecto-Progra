@@ -20,8 +20,9 @@ public class GestorReservas {
             System.out.println("GESTIÓN DE RESERVAS");
             System.out.println("1. Crear Reserva");
             System.out.println("2. Mostrar Reservas");
-            System.out.println("3. Eliminar Reserva");
-            System.out.println("4. Volver al menú principal");
+            System.out.println("3. Buscar Reservas por Día");
+            System.out.println("4. Eliminar Reserva");
+            System.out.println("5. Volver al menú principal");
             System.out.print("Escoja una opción: ");
             int opcion = lector.nextInt();
             lector.nextLine(); // Limpiar el buffer
@@ -29,8 +30,9 @@ public class GestorReservas {
             switch (opcion) {
                 case 1 -> crearReserva(sdf);
                 case 2 -> mostrarReservas();
-                case 3 -> eliminarReserva();
-                case 4 -> {
+                case 3 -> buscarReservasPorDia();
+                case 4 -> eliminarReserva();
+                case 5 -> {
                     return;
                 }
                 default -> System.out.println("Opción inválida. Intente de nuevo.");
@@ -72,6 +74,35 @@ public class GestorReservas {
         System.out.print("Ingrese el nombre de la atracción para mostrar reservas: ");
         String nombreAtraccion = lector.nextLine();
         parque.mostrarReservasDeAtraccion(nombreAtraccion);
+    }
+
+    private void mostrarReservas() {
+        System.out.print("Ingrese el nombre de la atracción para mostrar reservas: ");
+        String nombreAtraccion = lector.nextLine();
+        parque.mostrarReservasDeAtraccion(nombreAtraccion);
+    }
+        private void buscarReservasPorDia() throws ParseException {
+        System.out.print("Ingrese la fecha (dd/MM/yyyy): ");
+        String fechaStr = lector.nextLine();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date fechaBuscada = sdf.parse(fechaStr);
+
+        System.out.println("Reservas para el día " + fechaStr + ":");
+
+        boolean hayReservas = false;
+        for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
+            for (Reserva reserva : atraccion.getReservas()) {
+                SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy");
+                if (sdfFecha.format(reserva.getFechaHora()).equals(fechaStr)) {
+                    System.out.println("Atracción: " + atraccion.getNombre() + " - " + reserva);
+                    hayReservas = true;
+                }
+            }
+        }
+    
+        if (!hayReservas) {
+            System.out.println("No se encontraron reservas para la fecha indicada.");
+        }
     }
 
     private void eliminarReserva() {
