@@ -35,7 +35,7 @@ public class Main {
             // Limpiar pantalla
             System.out.print("\033[H\033[2J");
             System.out.flush();
-            parqueCentral.mostrarInfo(false);
+            parqueCentral.mostrarInfo();
             System.out.println("MENU");
             System.out.println("1. Gestión de Atracciones");
             System.out.println("2. Gestión de Reservas");
