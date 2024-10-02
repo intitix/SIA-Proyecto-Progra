@@ -1,28 +1,31 @@
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws ParseException {
-
-        // INICIALIZAR PARQUE
-        HashMap<String, Atraccion> atracciones = new HashMap<>();
-        Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
         
-        // Mapa con atracciones precargadas
+        // Crear mapa de atracciones y agregar atracciones precargadas
+        HashMap<String, Atraccion> atracciones = new HashMap<>();
         atracciones.put("Montaña rusa", new Atraccion("Montaña rusa", 30, 10));
         atracciones.put("Carrusel", new Atraccion("Carrusel", 20, 15));
-        
-        // Inicializar lista de reservas con dos reservas precargadas
-        List<Reserva> reservas = new ArrayList<>();
-        // Crear dos reservas precargadas
+
+        // Inicializar parque
+        Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
+             
+        // Crear un formato de fecha
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        reservas.add(new Reserva(4, atracciones.get("Montaña rusa"), sdf.parse("10/09/2024 14:00")));
-        reservas.add(new Reserva(2, atracciones.get("Carrusel"), sdf.parse("11/09/2024 16:00")));
-        
+
+        // Crear reservas
+        Reserva reserva1 = new Reserva(10, atracciones.get("Montaña rusa"), sdf.parse("10/09/2024 14:00"));
+        Reserva reserva2 = new Reserva(15, atracciones.get("Montaña rusa"), sdf.parse("10/09/2024 15:00"));
+
+        // Agregar reservas a la atracción "Montaña rusa"
+        atracciones.get("Montaña rusa").agregarReserva(reserva1);
+        atracciones.get("Montaña rusa").agregarReserva(reserva2);
+
         // Lector
         Scanner lector = new Scanner(System.in);
         
@@ -47,32 +50,29 @@ public class Main {
                 switch (opcion) {
                     case 1 -> {
                         // Instanciar Gestor y usar método
-                        GestorAtracciones gestor = new GestorAtracciones(atracciones, lector);
+                        GestorAtracciones gestor = new GestorAtracciones(parqueCentral, lector);
                         gestor.gestionar();
                     }
                     case 2 -> {
-                        while (true) {
-                            try {
-                                GestorReservas gestor = new GestorReservas(reservas, new ArrayList<>(atracciones.values()),lector);
-                                gestor.gestionar();
-                                break; // Salir del bucle interno después de gestionar reservas
-                            } catch (ParseException e) {
-                                System.out.println("Error en el formato de la fecha.");
-                            }
-                        }
+                        GestorReservas gestor = new GestorReservas(parqueCentral, lector);
+                        gestor.gestionar();
                     }
                     case 3 -> {
-                        GestorParque gestorParque = new GestorParque(parqueCentral, reservas, lector);
+                        GestorParque gestorParque = new GestorParque(parqueCentral, lector);
                         gestorParque.gestionarParque();
                     }
                     case 4 -> {
-                        System.out.println("Saliendo...");
-                        lector.close();
-                        return; // Salir del programa
+                        System.out.print("¿Está seguro que desea salir? (s/n): ");
+                        String confirmacion = lector.nextLine();
+                        if (confirmacion.equalsIgnoreCase("s")) {
+                            System.out.println("Saliendo...");
+                            lector.close();
+                            return; // Salir del programa
+                        }
                     }
                     default -> System.out.println("Opción inválida. Intente de nuevo.");
                 }
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Error: Entrada inválida. Por favor, ingrese un número.");
                 lector.nextLine(); // Limpiar el buffer de entrada
             }
