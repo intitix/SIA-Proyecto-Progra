@@ -1,99 +1,84 @@
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class GestorAtracciones {
-    private final HashMap<String, Atraccion> atracciones;
+    private final Parque parque; // El parque contiene la información de las atracciones
     private final Scanner lector;
 
-    public GestorAtracciones(HashMap<String, Atraccion> atracciones, Scanner lector) {
-        this.atracciones = atracciones;
+    public GestorAtracciones(Parque parque, Scanner lector) {
+        this.parque = parque;
         this.lector = lector;
     }
 
     public void gestionar() {
-    int opcion;
-    OUTER:
-    while (true) {
-        try {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-            System.out.println("GESTOR DE ATRACCIONES");
-            System.out.println("");
-            System.out.println("1. Crear Atraccion");
-            System.out.println("2. Lista Atracciones");
-            System.out.println("3. Modificar Atraccion");
-            System.out.println("4. Buscar Atracciones por rango de capacidad");
-            System.out.println("5. Eliminar Atraccion");
-            System.out.println("6. Volver al menu principal");
-            System.out.print("Escoja una opcion: ");
-            opcion = lector.nextInt();
-            lector.nextLine(); // Limpiar buffer de entrada
-            switch (opcion) {
-                case 1 -> crearAtraccion();
-                case 2 -> mostrarAtracciones();
-                case 3 -> modificarAtraccion();
-                case 4 -> mostrarAtraccionesPorRango();
-                case 5 -> eliminarAtraccion();
-                case 6 -> {
-                    // Opción para volver al menú principal
-                    System.out.println("Volviendo al menú principal...");
-                    break OUTER; // Esto rompe el ciclo y vuelve al menú
+        int opcion;
+        OUTER:
+        while (true) {
+            try {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+                System.out.println("GESTOR DE ATRACCIONES");
+                System.out.println("");
+                System.out.println("1. Crear Atracción");
+                System.out.println("2. Lista Atracciones");
+                System.out.println("3. Modificar Atracción");
+                System.out.println("4. Buscar Atracciones por rango de capacidad");
+                System.out.println("5. Eliminar Atracción");
+                System.out.println("6. Volver al menú principal");
+                System.out.print("Escoja una opción: ");
+                opcion = lector.nextInt();
+                lector.nextLine(); // Limpiar buffer de entrada
+                switch (opcion) {
+                    case 1 -> crearAtraccion();
+                    case 2 -> mostrarAtracciones();
+                    case 3 -> modificarAtraccion();
+                    case 4 -> mostrarAtraccionesPorRango();
+                    case 5 -> eliminarAtraccion();
+                    case 6 -> {
+                        System.out.println("Volviendo al menú principal...");
+                        break OUTER; // Vuelve al menú principal
+                    }
+                    default -> System.out.println("Opción no válida. Intente nuevamente.");
                 }
-                default -> System.out.println("Opción no válida. Intente nuevamente.");
+            } catch (Exception e) {
+                System.out.println("Error, asegúrese de colocar los datos correctamente");
+                lector.nextLine(); // Limpiar el buffer en caso de error
             }
-        } catch (Exception e) {
-            System.out.println("Error, asegúrese de colocar los datos correctamente ");
-
-            lector.nextLine(); // Limpiar buffer de entrada
         }
     }
-}
 
     private void crearAtraccion() {
-    System.out.print("\033[H\033[2J");
-    System.out.flush();
-    System.out.println("CREANDO ATRACCION");
-    System.out.println("");
-    
-    Atraccion nuevaAtraccion = new Atraccion(); // Crear la instancia vacía
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("CREANDO ATRACCIÓN");
+        System.out.println("");
 
-    System.out.print("Ingrese el nombre de la nueva atraccion: ");
-    String nombreAtraccion = lector.nextLine();
-    nuevaAtraccion.setNombre(nombreAtraccion); // Usar setter para nombre
+        System.out.print("Ingrese el nombre de la nueva atracción: ");
+        String nombreAtraccion = lector.nextLine();
 
-    System.out.print("Ingrese la capacidad de la nueva atraccion: ");
-    int capacidad = lector.nextInt();
-    nuevaAtraccion.setCapacidad(capacidad); // Usar setter para capacidad
+        System.out.print("Ingrese la capacidad de la nueva atracción: ");
+        int capacidad = lector.nextInt();
 
-    System.out.print("Ingrese la duracion de la nueva atraccion (en minutos): ");
-    int duracion = lector.nextInt();
-    lector.nextLine();
-    nuevaAtraccion.setDuracion(duracion); // Usar setter para duración
+        System.out.print("Ingrese la duración de la nueva atracción (en minutos): ");
+        int duracion = lector.nextInt();
+        lector.nextLine(); // Limpiar el buffer
 
-    atracciones.put(nombreAtraccion, nuevaAtraccion); // Añadir atracción al mapa
+        Atraccion nuevaAtraccion = new Atraccion(nombreAtraccion, capacidad, duracion);
+        parque.agregarAtraccion(nombreAtraccion, nuevaAtraccion); // Usar el parque para almacenar la atracción
 
-    System.out.println("");
-    System.out.println("Atracción creada exitosamente.");
-    System.out.println("Presione Enter para continuar...");
-    lector.nextLine();
-}
-
+        System.out.println("Atracción creada exitosamente.");
+        System.out.println("Presione Enter para continuar...");
+        lector.nextLine();
+    }
 
     private void mostrarAtracciones() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println("Lista de atracciones:");
-        for (Atraccion atraccion : atracciones.values()) {
-            atraccion.mostrarAtraccion();  // Llama al método mostrarAtraccion
+
+        for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
+            atraccion.mostrarAtraccion();  // Mostrar detalles
         }
-        System.out.println();
-        System.out.println("¿Desea ver detalles de las atracciones? (s/n)");
-        String respuesta = lector.nextLine();
-        System.out.println();
-        boolean mostrarDetalles = respuesta.equalsIgnoreCase("s");
-        for (Atraccion atraccion : atracciones.values()) {
-            atraccion.mostrarAtraccion(mostrarDetalles);  // Llama al método con parámetro
-        }
+
         System.out.println("");
         System.out.println("Presione Enter para continuar...");
         lector.nextLine();
@@ -102,42 +87,42 @@ public class GestorAtracciones {
     private void modificarAtraccion() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        System.out.println("BUSCAR Y MODIFICAR ATRACCION");
-        System.out.print("Ingrese el nombre de la atraccion que desea buscar: ");
+        System.out.println("BUSCAR Y MODIFICAR ATRACCIÓN");
+        System.out.print("Ingrese el nombre de la atracción que desea buscar: ");
         String nombreBusqueda = lector.nextLine();
-    
-        if (atracciones.containsKey(nombreBusqueda)) {
-            Atraccion atraccion = atracciones.get(nombreBusqueda);
-            System.out.println("Atraccion encontrada:");
-            atraccion.mostrarAtraccion(true); // Muestra detalles, incluyendo duración
 
-            System.out.println("¿Desea modificar esta atraccion? (s/n)");
+        Atraccion atraccion = parque.buscarAtraccion(nombreBusqueda);
+        if (atraccion != null) {
+            System.out.println("Atracción encontrada:");
+            atraccion.mostrarAtraccion(true);
+
+            System.out.println("¿Desea modificar esta atracción? (s/n)");
             String respuesta = lector.nextLine();
             if (respuesta.equalsIgnoreCase("s")) {
-                System.out.print("Ingrese el nuevo nombre de la atraccion (deje en blanco para mantener el actual): ");
+                System.out.print("Ingrese el nuevo nombre de la atracción (deje en blanco para mantener el actual): ");
                 String nuevoNombre = lector.nextLine();
                 if (!nuevoNombre.isEmpty()) {
-                    atracciones.remove(nombreBusqueda); // Elimina la entrada antigua
+                    parque.eliminarAtraccion(nombreBusqueda);
                     atraccion.setNombre(nuevoNombre);
-                    atracciones.put(nuevoNombre, atraccion); // Agrega la nueva entrada
+                    parque.agregarAtraccion(nuevoNombre, atraccion); // Reinsertar la atracción modificada
                 }
 
-                System.out.print("Ingrese la nueva capacidad de la atraccion (deje en blanco para mantener la actual): ");
+                System.out.print("Ingrese la nueva capacidad de la atracción (deje en blanco para mantener la actual): ");
                 String nuevaCapacidad = lector.nextLine();
                 if (!nuevaCapacidad.isEmpty()) {
                     atraccion.setCapacidad(Integer.parseInt(nuevaCapacidad));
                 }
 
-                System.out.print("Ingrese la nueva duración de la atraccion (deje en blanco para mantener la actual): ");
+                System.out.print("Ingrese la nueva duración de la atracción (deje en blanco para mantener la actual): ");
                 String nuevaDuracion = lector.nextLine();
                 if (!nuevaDuracion.isEmpty()) {
                     atraccion.setDuracion(Integer.parseInt(nuevaDuracion));
                 }
 
-                System.out.println("Atraccion modificada exitosamente.");
+                System.out.println("Atracción modificada exitosamente.");
             }
         } else {
-            System.out.println("Atraccion no encontrada.");
+            System.out.println("Atracción no encontrada.");
         }
 
         System.out.println("Presione Enter para continuar...");
@@ -155,7 +140,7 @@ public class GestorAtracciones {
         lector.nextLine(); // Limpiar el buffer
 
         System.out.println("\nAtracciones en el rango de capacidad:");
-        for (Atraccion atraccion : atracciones.values()) {
+        for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
             if (atraccion.getCapacidad() >= capacidadMin && atraccion.getCapacidad() <= capacidadMax) {
                 atraccion.mostrarAtraccion();
             }
@@ -168,21 +153,22 @@ public class GestorAtracciones {
     private void eliminarAtraccion() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        System.out.println("ELIMINAR ATRACCION");
+        System.out.println("ELIMINAR ATRACCIÓN");
         System.out.println("");
+
         int i = 1;
-        for (String nombre : atracciones.keySet()) {
+        for (String nombre : parque.getMapaAtracciones().keySet()) {
             System.out.println(i + ". " + nombre);
             i++;
         }
         System.out.print("Ingrese el nombre de la atracción a eliminar: ");
         String nombreEliminar = lector.nextLine();
-        if (atracciones.containsKey(nombreEliminar)) {
-            atracciones.remove(nombreEliminar);
+        if (parque.eliminarAtraccion(nombreEliminar)) {
             System.out.println("Atracción eliminada exitosamente.");
         } else {
             System.out.println("Atracción no encontrada.");
         }
+
         System.out.println("Presione Enter para continuar...");
         lector.nextLine();
     }
