@@ -1,19 +1,14 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
 
 public class GestorReservas {
-    private final List<Reserva> reservas;
-    private final List<Atraccion> atracciones;
+    private final Parque parque;
     private final Scanner lector;
 
-    public GestorReservas(List<Reserva> reservas, List<Atraccion> atracciones, Scanner lector) {
-        this.reservas = reservas;
-        this.atracciones = atracciones;
+    public GestorReservas(Parque parque, Scanner lector) {
+        this.parque = parque;
         this.lector = lector;
     }
 
@@ -26,8 +21,7 @@ public class GestorReservas {
             System.out.println("1. Crear Reserva");
             System.out.println("2. Mostrar Reservas");
             System.out.println("3. Eliminar Reserva");
-            System.out.println("4. Buscar Reservas por Día");
-            System.out.println("5. Volver al menú principal");
+            System.out.println("4. Volver al menú principal");
             System.out.print("Escoja una opción: ");
             int opcion = lector.nextInt();
             lector.nextLine(); // Limpiar el buffer
@@ -36,8 +30,7 @@ public class GestorReservas {
                 case 1 -> crearReserva(sdf);
                 case 2 -> mostrarReservas();
                 case 3 -> eliminarReserva();
-                case 4 -> buscarReservasPorDia();
-                case 5 -> {
+                case 4 -> {
                     return;
                 }
                 default -> System.out.println("Opción inválida. Intente de nuevo.");
@@ -50,29 +43,25 @@ public class GestorReservas {
         System.out.print("Ingrese el nombre de la atracción: ");
         String nombreAtraccion = lector.nextLine();
 
-        Atraccion atraccion = null;
-        for (Atraccion a : atracciones) {
-            if (a.getNombre().equalsIgnoreCase(nombreAtraccion)) {
-                atraccion = a;
-                break;
-            }
-        }
+        Atraccion atraccion = parque.buscarAtraccion(nombreAtraccion);
 
         if (atraccion != null) {
-               System.out.print("Ingrese el grupo de personas: ");
-               int grupoPersonas = lector.nextInt();
-               lector.nextLine(); // Limpiar el buffer
+            System.out.print("Ingrese el grupo de personas: ");
+            int grupoPersonas = lector.nextInt();
+            lector.nextLine(); // Limpiar el buffer
 
-               // Validar que el tamaño del grupo no supere la capacidad de la atracción
-               if (grupoPersonas > atraccion.getCapacidad()) {
-                   System.out.println("Error: El grupo de personas supera la capacidad de la atracción.");
-                   return;
-               }
+            // Validar que el tamaño del grupo no supere la capacidad de la atracción
+            if (grupoPersonas > atraccion.getCapacidad()) {
+                System.out.println("Error: El grupo de personas supera la capacidad de la atracción.");
+                return;
+            }
+
             System.out.print("Ingrese la fecha y hora de la reserva (dd/MM/yyyy HH:mm): ");
             String fechaHoraStr = lector.nextLine();
             Date fechaHora = sdf.parse(fechaHoraStr);
 
-            reservas.add(new Reserva(grupoPersonas, atraccion, fechaHora));
+            Reserva reserva = new Reserva(grupoPersonas, atraccion, fechaHora);
+            parque.agregarReservaAAtraccion(nombreAtraccion, reserva);
             System.out.println("Reserva creada exitosamente.");
         } else {
             System.out.println("Atracción no encontrada.");
@@ -80,115 +69,34 @@ public class GestorReservas {
     }
 
     private void mostrarReservas() {
-        System.out.println("LISTA DE RESERVAS");
-        for (Reserva reserva : reservas) {
-            System.out.println(reserva);
-        }
+        System.out.print("Ingrese el nombre de la atracción para mostrar reservas: ");
+        String nombreAtraccion = lector.nextLine();
+        parque.mostrarReservasDeAtraccion(nombreAtraccion);
     }
 
     private void eliminarReserva() {
         System.out.print("Ingrese el nombre de la atracción de la reserva a eliminar: ");
         String nombreAtraccion = lector.nextLine();
 
-        Reserva reservaAEliminar = null;
-        for (Reserva reserva : reservas) {
-            if (reserva.getAtraccion().getNombre().equalsIgnoreCase(nombreAtraccion)) {
-                reservaAEliminar = reserva;
-                break;
-            }
-        }
+        Atraccion atraccion = parque.buscarAtraccion(nombreAtraccion);
 
-        if (reservaAEliminar != null) {
-            reservas.remove(reservaAEliminar);
-            System.out.println("Reserva eliminada exitosamente.");
+        if (atraccion != null) {
+            System.out.print("Ingrese el grupo de personas de la reserva a eliminar: ");
+            int grupoPersonas = lector.nextInt();
+            lector.nextLine(); // Limpiar el buffer
+            System.out.print("Ingrese la fecha y hora de la reserva a eliminar (dd/MM/yyyy HH:mm): ");
+            String fechaHoraStr = lector.nextLine();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            try {
+                Date fechaHora = sdf.parse(fechaHoraStr);
+                Reserva reservaAEliminar = new Reserva(grupoPersonas, atraccion, fechaHora);
+                parque.eliminarReservaDeAtraccion(nombreAtraccion, reservaAEliminar);
+                System.out.println("Reserva eliminada exitosamente.");
+            } catch (ParseException e) {
+                System.out.println("Error en el formato de la fecha y hora.");
+            }
         } else {
-            System.out.println("Reserva no encontrada.");
-        }
-    }
-
-    public void buscarReservasPorDia() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        sdf.setLenient(false); // Solo fechas válidas son aceptadas
-    
-        System.out.print("Ingrese el día para filtrar (dd/MM/yyyy): ");
-        String diaStr = lector.nextLine();
-
-        try {
-            // Parsear la fecha ingresada
-            Date dia = sdf.parse(diaStr);
-        
-            System.out.println("RESERVAS PARA EL DÍA " + sdf.format(dia) + ":");
-            boolean hayReservas = false;
-        
-            for (Reserva reserva : reservas) {
-                // Comparar solo la parte de la fecha (sin la hora)
-                if (sdf.format(reserva.getFechaHora()).equals(sdf.format(dia))) {
-                    System.out.println(reserva);
-                    hayReservas = true;
-                }
-            }
-
-            // Mostrar mensaje si no hay reservas
-            if (!hayReservas) {
-                System.out.println("No hay reservas para este día.");
-            }
-        
-        } catch (ParseException e) {
-            // Manejar el error si el formato de la fecha es incorrecto o es inválida
-            System.out.println("Formato de fecha incorrecto. Por favor, use el formato dd/MM/yyyy.");
-        }
-    }
-
-    // Método para mostrar estadísticas de reservas
-    public void mostrarEstadisticas() {
-        System.out.println("ESTADÍSTICAS DE RESERVAS");
-
-        // Mostrar número total de reservas
-        System.out.println("Número total de reservas: " + reservas.size());
-
-        // Determinar la atracción con más reservas
-        Map<String, Integer> conteoPorAtraccion = new HashMap<>();
-        for (Reserva reserva : reservas) {
-            String nombreAtraccion = reserva.getAtraccion().getNombre();
-            conteoPorAtraccion.put(nombreAtraccion, conteoPorAtraccion.getOrDefault(nombreAtraccion, 0) + 1);
-        }
-
-        String atraccionMasReservada = null;
-        int maxReservas = 0;
-        for (Map.Entry<String, Integer> entry : conteoPorAtraccion.entrySet()) {
-            if (entry.getValue() > maxReservas) {
-                atraccionMasReservada = entry.getKey();
-                maxReservas = entry.getValue();
-            }
-        }
-
-        if (atraccionMasReservada != null) {
-            System.out.println("Atracción con más reservas: " + atraccionMasReservada + " (" + maxReservas + " reservas)");
-        } else {
-            System.out.println("No hay reservas registradas.");
-        }
-
-        // Determinar la fecha con más reservas
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Map<String, Integer> conteoPorFecha = new HashMap<>();
-        for (Reserva reserva : reservas) {
-            String fechaStr = sdf.format(reserva.getFechaHora());
-            conteoPorFecha.put(fechaStr, conteoPorFecha.getOrDefault(fechaStr, 0) + 1);
-        }
-
-        String fechaMasReservas = null;
-        int maxReservasFecha = 0;
-        for (Map.Entry<String, Integer> entry : conteoPorFecha.entrySet()) {
-            if (entry.getValue() > maxReservasFecha) {
-                fechaMasReservas = entry.getKey();
-                maxReservasFecha = entry.getValue();
-            }
-        }
-
-        if (fechaMasReservas != null) {
-            System.out.println("Fecha con más reservas: " + fechaMasReservas + " (" + maxReservasFecha + " reservas)");
-        } else {
-            System.out.println("No hay reservas registradas.");
+            System.out.println("Atracción no encontrada.");
         }
     }
 }
