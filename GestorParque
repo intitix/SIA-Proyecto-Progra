@@ -1,19 +1,16 @@
+import java.util.Scanner;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Scanner;
 
 public class GestorParque {
     private final Parque parque;
-    private final List<Reserva> reservas; // Lista de reservas
     private final Scanner lector;
 
-    public GestorParque(Parque parque, List<Reserva> reservas, Scanner lector) {
+    public GestorParque(Parque parque, Scanner lector) {
         this.parque = parque;
-        this.reservas = reservas; // Inicializar la lista de reservas
         this.lector = lector;
     }
 
@@ -27,7 +24,7 @@ public class GestorParque {
             System.out.println("3. Generar reporte");
             System.out.println("4. Volver al menú principal");
             System.out.print("Escoja una opción: ");
-            
+
             try {
                 int opcion = lector.nextInt();
                 lector.nextLine(); // Limpiar el buffer
@@ -87,10 +84,13 @@ public class GestorParque {
         System.out.flush();
         System.out.println("REPORTE DEL PARQUE");
 
+        // Nombre del parque
+        System.out.println("Nombre del Parque: " + parque.getNombre());
+
         // Generar el contenido del reporte en formato CSV
         StringBuilder reporte = new StringBuilder();
         reporte.append("Nombre del Parque,").append(parque.getNombre()).append("\n");
-    
+
         // Capacidad máxima
         int capacidadMaxima = parque.getMapaAtracciones().values().stream()
                                     .mapToInt(Atraccion::getCapacidad)
@@ -104,8 +104,12 @@ public class GestorParque {
         System.out.println("Número de Atracciones: " + numeroAtracciones);
 
         // Número de reservas
-        System.out.println("Número de Reservas Activas: " + reservas.size());
-        reporte.append("Número de Reservas Activas,").append(reservas.size()).append("\n");
+        int numeroReservas = 0; // Asume que tienes acceso a la lista de reservas
+        for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
+            numeroReservas += atraccion.getReservas().size(); // Sumar reservas de todas las atracciones
+        }
+        reporte.append("Número de Reservas Activas,").append(numeroReservas).append("\n");
+        System.out.println("Número de Reservas Activas: " + numeroReservas);
 
         // Generar el archivo de reporte
         try {
