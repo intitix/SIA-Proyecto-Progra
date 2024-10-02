@@ -6,23 +6,21 @@ public class Parque {
     private int horaApertura;
     private int horaCierre;
 
-    
-    //CONSTRUCTOR
+    // CONSTRUCTOR
     public Parque(String nombre, HashMap<String, Atraccion> mapaAtracciones, int horaApertura, int horaCierre) {
         this.nombre = nombre;
-        this.mapaAtracciones = mapaAtracciones;
+        this.mapaAtracciones = new HashMap<>(mapaAtracciones);
         this.horaApertura = horaApertura;
         this.horaCierre = horaCierre;
     }
-    
-    //GETTERS
 
+    // GETTERS
     public String getNombre() {
         return nombre;
     }
 
     public HashMap<String, Atraccion> getMapaAtracciones() {
-        return mapaAtracciones;
+        return new HashMap<>(mapaAtracciones);
     }
 
     public int getHoraApertura() {
@@ -32,25 +30,84 @@ public class Parque {
     public int getHoraCierre() {
         return horaCierre;
     }
-    
-    //SETTERS
-    
+
+    // SETTERS
     public void setHoraApertura(int horaApertura) {
         this.horaApertura = horaApertura;
     }
-    
+
     public void setHoraCierre(int horaCierre) {
         this.horaCierre = horaCierre;
     }
-    
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
     public void setMapaAtracciones(HashMap<String, Atraccion> mapaAtracciones) {
-        this.mapaAtracciones = mapaAtracciones;
+        this.mapaAtracciones = new HashMap<>(mapaAtracciones);
     }
 
+    // Métodos para gestionar atracciones
+    public void agregarAtraccion(String nombreAtraccion, Atraccion atraccion) {
+        mapaAtracciones.put(nombreAtraccion, atraccion);
+    }
+    
+    
+
+    public boolean eliminarAtraccion(String nombreAtraccion) {
+    // Verifica si la atracción existe antes de intentar eliminarla
+    if (mapaAtracciones.containsKey(nombreAtraccion)) {
+        mapaAtracciones.remove(nombreAtraccion);
+        return true; // Indica que la atracción fue eliminada
+    } else {
+        return false; // Indica que la atracción no se encontró
+    }
+    }
+   
+    public Atraccion buscarAtraccion(String nombreAtraccion) {
+        
+    // Verifica si el mapa de atracciones contiene la atracción buscada
+    if (mapaAtracciones.containsKey(nombreAtraccion)) {
+        
+        // Retorna la atracción correspondiente
+        return mapaAtracciones.get(nombreAtraccion);
+    } else {
+        
+        return null; // O puedes lanzar una excepción
+    }
+}
+
+    // Métodos para gestionar reservas de una atracción específica
+    public void agregarReservaAAtraccion(String nombreAtraccion, Reserva reserva) {
+        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion);
+        if (atraccion != null) {
+            atraccion.agregarReserva(reserva);
+        } else {
+            System.out.println("La atracción no existe.");
+        }
+    }
+
+    public void eliminarReservaDeAtraccion(String nombreAtraccion, Reserva reserva) {
+        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion);
+        if (atraccion != null) {
+            atraccion.eliminarReserva(reserva);
+        } else {
+            System.out.println("La atracción no existe.");
+        }
+    }
+
+    public void mostrarReservasDeAtraccion(String nombreAtraccion) {
+        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion);
+        if (atraccion != null) {
+            System.out.println("Reservas para la atracción " + nombreAtraccion + ":");
+            atraccion.mostrarReservas();
+        } else {
+            System.out.println("La atracción no existe.");
+        }
+    }
+
+    // Mostrar información del parque
     public void mostrarInfo(boolean mostrarAtracciones) {
         System.out.println("Nombre del Parque: " + nombre);
         System.out.println("Horario: " + horaApertura + " - " + horaCierre);
@@ -61,4 +118,5 @@ public class Parque {
             }
         }
     }
+}
 }
