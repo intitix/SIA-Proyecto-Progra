@@ -3,14 +3,12 @@ import java.util.Date;
 
 public class Reserva {
     private int grupoPersonas;
-    private Atraccion atraccion;
     private Date fechaHora;
 
     
     //Constructores
     public Reserva(int grupoPersonas, Atraccion atraccion, Date fechaHora) {
         this.grupoPersonas = grupoPersonas;
-        this.atraccion = atraccion;
         this.fechaHora = fechaHora;
     }
 
@@ -20,9 +18,6 @@ public class Reserva {
         return grupoPersonas;
     }
     
-    public Atraccion getAtraccion() {
-        return atraccion;
-    }
     
     public Date getFechaHora() {
         return fechaHora;
@@ -34,16 +29,15 @@ public class Reserva {
         this.grupoPersonas = grupoPersonas;
     }
 
-    public void setAtraccion(Atraccion atraccion) {
-        this.atraccion = atraccion;
-    }
 
     public void setFechaHora(Date fechaHora) {
         this.fechaHora = fechaHora;
     }
 
+    // Método toString para imprimir detalles de la reserva
     @Override
     public String toString() {
-        return "Reserva para " + grupoPersonas + " personas en la atracción " + atraccion.getNombre() + " el " + fechaHora;
-    }
+        return "Reserva para " + grupoPersonas + " en la fecha y hora " + fechaHora;
+}
+    
 }
