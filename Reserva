@@ -1,43 +1,63 @@
-import java.util.Date;
+import java.text.SimpleDateFormat; // Importa la clase SimpleDateFormat para formatear fechas
+import java.util.Date; // Importa la clase Date para manejar fechas y horas
 
-
+/**
+ * Clase que representa una reserva en una atracción del parque.
+ */
 public class Reserva {
-    private int grupoPersonas;
-    private Date fechaHora;
+    @SuppressWarnings("FieldMayBeFinal") // Suprime advertencias sobre campos que podrían ser finales
+    private int grupoPersonas; // Número de personas en la reserva
+    private Atraccion atraccion; // Atracción asociada a la reserva
+    private Date fechaHora; // Fecha y hora de la reserva
 
-    
-    //Constructores
+    /**
+     * Constructor de la clase Reserva.
+     *
+     * @param grupoPersonas el número de personas en la reserva
+     * @param atraccion la atracción asociada a la reserva
+     * @param fechaHora la fecha y hora de la reserva
+     */
     public Reserva(int grupoPersonas, Atraccion atraccion, Date fechaHora) {
-        this.grupoPersonas = grupoPersonas;
-        this.fechaHora = fechaHora;
+        this.grupoPersonas = grupoPersonas; // Inicializa el número de personas
+        this.atraccion = atraccion; // Inicializa la atracción
+        this.fechaHora = fechaHora; // Inicializa la fecha y hora
     }
 
-    
-    //GETTERS
+    /**
+     * Obtiene el número de personas en la reserva.
+     *
+     * @return el número de personas
+     */
     public int getGrupoPersonas() {
-        return grupoPersonas;
+        return grupoPersonas; // Retorna el número de personas
     }
-    
-    
+
+    /**
+     * Obtiene la atracción asociada a la reserva.
+     *
+     * @return la atracción
+     */
+    public Atraccion getAtraccion() {
+        return atraccion; // Retorna la atracción
+    }
+
+    /**
+     * Obtiene la fecha y hora de la reserva.
+     *
+     * @return la fecha y hora
+     */
     public Date getFechaHora() {
-        return fechaHora;
-    }
-    
-    //SETTERS
-    
-    public void setGrupoPersonas(int grupoPersonas) {
-        this.grupoPersonas = grupoPersonas;
+        return fechaHora; // Retorna la fecha y hora
     }
 
-
-    public void setFechaHora(Date fechaHora) {
-        this.fechaHora = fechaHora;
-    }
-
-    // Método toString para imprimir detalles de la reserva
+    /**
+     * Retorna una representación en forma de cadena de la reserva.
+     *
+     * @return una cadena que describe la reserva
+     */
     @Override
     public String toString() {
-        return "Reserva para " + grupoPersonas + " en la fecha y hora " + fechaHora;
-}
-    
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm"); // Formato de la fecha
+        return "Reserva para " + grupoPersonas + " personas. En la fecha " + sdf.format(fechaHora) + " hrs."; // Retorna la descripción de la reserva
+    }
 }
