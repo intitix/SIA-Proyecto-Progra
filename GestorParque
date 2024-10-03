@@ -1,128 +1,151 @@
-import javax.swing.*;
-import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.swing.*; // Importa la biblioteca Swing para la interfaz gráfica
+import java.awt.*; // Importa la biblioteca AWT para componentes de interfaz gráfica
+import java.io.BufferedWriter; // Importa BufferedWriter para escribir en archivos
+import java.io.FileWriter; // Importa FileWriter para crear archivos
+import java.io.IOException; // Importa IOException para manejar excepciones de entrada/salida
 
+/**
+ * Clase que gestiona las operaciones relacionadas con el parque.
+ */
 public class GestorParque {
-    private final Parque parque;
+    private final Parque parque; // Referencia al objeto Parque que se gestiona
 
+    /**
+     * Constructor que inicializa el gestor del parque.
+     *
+     * @param parque el parque que se va a gestionar
+     */
     public GestorParque(Parque parque) {
-        this.parque = parque;
-        gestionar();
+        this.parque = parque; // Asigna el parque a la variable de instancia
+        gestionar(); // Llama al método gestionar para inicializar la interfaz
     }
 
-private void gestionar() {
-    JFrame frame = new JFrame("Gestión del Parque");
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    frame.setSize(400, 300);
-    frame.setLayout(new GridLayout(4, 1)); // Cambiado a 6 filas para incluir el título y todos los botones
+    /**
+     * Método que gestiona la interfaz gráfica para las operaciones del parque.
+     */
+    private void gestionar() {
+        JFrame frame = new JFrame("Gestión del Parque"); // Inicializa la ventana del gestor
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Permite cerrar solo esta ventana
+        frame.setSize(400, 300); // Establece el tamaño de la ventana
+        frame.setLayout(new GridLayout(4, 1)); // Crea un layout con 4 filas para los botones
+        frame.setLocationRelativeTo(null); // Centra el JFrame en la pantalla
 
-    frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+        // Título
+        JLabel lblTitulo = new JLabel("Gestión del Parque", SwingConstants.CENTER); // Crea una etiqueta para el título
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18)); // Establece el estilo de la fuente
+        frame.add(lblTitulo); // Añade la etiqueta al frame
 
-    // Título
-    JLabel lblTitulo = new JLabel("Gestión del Parque", SwingConstants.CENTER);
-    lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-    frame.add(lblTitulo);
+        // Crear botones
+        JButton btnModificarHorario = new JButton("Modificar Horario"); // Botón para modificar el horario
+        JButton btnGenerarReporte = new JButton("Generar Reporte"); // Botón para generar el reporte
+        JButton btnVolver = new JButton("Volver al Menú Principal"); // Botón para volver al menú principal
 
-    // Crear botones
-    JButton btnModificarHorario = new JButton("Modificar Horario");
-    JButton btnGenerarReporte = new JButton("Generar Reporte");
-    JButton btnVolver = new JButton("Volver al Menú Principal");
+        // Agregar botones al frame
+        frame.add(btnModificarHorario); // Añade el botón de modificar horario
+        frame.add(btnGenerarReporte); // Añade el botón de generar reporte
+        frame.add(btnVolver); // Añade el botón de volver al menú principal
 
-    // Agregar botones al frame
-    frame.add(btnModificarHorario);
-    frame.add(btnGenerarReporte);
-    frame.add(btnVolver); // Agregando el botón "Volver"
+        // Asignar acciones a los botones
+        btnModificarHorario.addActionListener(e -> modificarHorario()); // Acción para modificar horario
+        btnGenerarReporte.addActionListener(e -> generarReporte()); // Acción para generar el reporte
 
-    // Asignar acciones a los botones
-    btnModificarHorario.addActionListener(e -> modificarHorario());
-    btnGenerarReporte.addActionListener(e -> generarReporte());
+        // Acción del botón "Volver"
+        btnVolver.addActionListener(e -> {
+            frame.dispose(); // Cierra la ventana actual
+            Main.mostrarMenuPrincipal(parque); // Regresa al menú principal
+        });
 
-    // Acción del botón "Volver"
-    btnVolver.addActionListener(e -> {
-        frame.dispose(); // Cerrar la ventana actual
-        Main.mostrarMenuPrincipal(parque); // Regresar al menú principal
-    });
+        // Mostrar la ventana
+        frame.setVisible(true); // Muestra la ventana del gestor
+    }
 
-    // Mostrar la ventana
-    frame.setVisible(true);
-}
-
-
+    /**
+     * Método que permite modificar el horario del parque.
+     */
     private void modificarHorario() {
-        JPanel panel = new JPanel(new GridLayout(2, 2));
-        JTextField txtApertura = new JTextField();
-        JTextField txtCierre = new JTextField();
-        panel.add(new JLabel("Nueva Hora de Apertura (0-23):"));
-        panel.add(txtApertura);
-        panel.add(new JLabel("Nueva Hora de Cierre (0-23):"));
-        panel.add(txtCierre);
+        JPanel panel = new JPanel(new GridLayout(2, 2)); // Crea un panel para recoger datos
+        JTextField txtApertura = new JTextField(); // Campo para la hora de apertura
+        JTextField txtCierre = new JTextField(); // Campo para la hora de cierre
+        panel.add(new JLabel("Nueva Hora de Apertura (0-23):")); // Etiqueta para hora de apertura
+        panel.add(txtApertura); // Añade el campo de apertura al panel
+        panel.add(new JLabel("Nueva Hora de Cierre (0-23):")); // Etiqueta para hora de cierre
+        panel.add(txtCierre); // Añade el campo de cierre al panel
 
-        int option = JOptionPane.showConfirmDialog(null, panel, "Modificar Horario", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
+        int option = JOptionPane.showConfirmDialog(null, panel, "Modificar Horario", JOptionPane.OK_CANCEL_OPTION); // Muestra el diálogo para modificar horario
+        if (option == JOptionPane.OK_OPTION) { // Verifica si se ha confirmado la acción
             try {
-                int nuevaHoraApertura = Integer.parseInt(txtApertura.getText());
-                int nuevaHoraCierre = Integer.parseInt(txtCierre.getText());
+                // Obtiene las horas ingresadas
+                int nuevaHoraApertura = Integer.parseInt(txtApertura.getText()); // Convierte a entero
+                int nuevaHoraCierre = Integer.parseInt(txtCierre.getText()); // Convierte a entero
 
+                // Verifica que las horas sean válidas
                 if (nuevaHoraApertura < 0 || nuevaHoraApertura > 23 || nuevaHoraCierre < 0 || nuevaHoraCierre > 23) {
-                    JOptionPane.showMessageDialog(null, "Horas inválidas. Deben estar entre 0 y 23.");
+                    JOptionPane.showMessageDialog(null, "Horas inválidas. Deben estar entre 0 y 23."); // Mensaje de error
                 } else {
-                    parque.setHoraApertura(nuevaHoraApertura);
-                    parque.setHoraCierre(nuevaHoraCierre);
-                    JOptionPane.showMessageDialog(null, "Horario modificado exitosamente.");
+                    parque.setHoraApertura(nuevaHoraApertura); // Modifica la hora de apertura
+                    parque.setHoraCierre(nuevaHoraCierre); // Modifica la hora de cierre
+                    JOptionPane.showMessageDialog(null, "Horario modificado exitosamente."); // Mensaje de éxito
                 }
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Por favor, ingrese números válidos.");
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese números válidos."); // Manejo de error
             }
         }
     }
 
+    /**
+     * Genera un reporte del estado actual del parque.
+     */
     private void generarReporte() {
-    // Generar contenido del reporte
-    StringBuilder reporte = new StringBuilder();
-    reporte.append("Nombre del Parque,").append(parque.getNombre()).append("\n");
+        // Generar contenido del reporte
+        StringBuilder reporte = new StringBuilder(); // Crea un StringBuilder para construir el reporte
+        reporte.append("Nombre del Parque,").append(parque.getNombre()).append("\n"); // Agrega el nombre del parque
 
-    // Horario de apertura y cierre
-    int horaApertura = parque.getHoraApertura(); // Asegúrate de tener este método en la clase Parque
-    int horaCierre = parque.getHoraCierre(); // Asegúrate de tener este método en la clase Parque
-    reporte.append("Horario de Apertura,").append(horaApertura).append("\n");
-    reporte.append("Horario de Cierre,").append(horaCierre).append("\n");
+        // Horario de apertura y cierre
+        int horaApertura = parque.getHoraApertura(); // Obtiene la hora de apertura
+        int horaCierre = parque.getHoraCierre(); // Obtiene la hora de cierre
+        reporte.append("Horario de Apertura,").append(horaApertura).append("\n"); // Agrega la hora de apertura al reporte
+        reporte.append("Horario de Cierre,").append(horaCierre).append("\n"); // Agrega la hora de cierre al reporte
 
-    // Capacidad máxima
-    int capacidadMaxima = parque.getMapaAtracciones().values().stream()
-                                .mapToInt(Atraccion::getCapacidad)
-                                .sum();
-    reporte.append("Capacidad Máxima,").append(capacidadMaxima).append("\n");
+        // Capacidad máxima
+        int capacidadMaxima = parque.getMapaAtracciones().values().stream()
+                .mapToInt(Atraccion::getCapacidad) // Suma las capacidades de las atracciones
+                .sum();
+        reporte.append("Capacidad Máxima,").append(capacidadMaxima).append("\n"); // Agrega la capacidad máxima al reporte
 
-    // Número de atracciones
-    int numeroAtracciones = parque.getMapaAtracciones().size();
-    reporte.append("Número de Atracciones,").append(numeroAtracciones).append("\n");
+        // Número de atracciones
+        int numeroAtracciones = parque.getMapaAtracciones().size(); // Obtiene el número de atracciones
+        reporte.append("Número de Atracciones,").append(numeroAtracciones).append("\n"); // Agrega el número de atracciones al reporte
 
-    // Número de reservas
-    int numeroReservas = 0; 
-    for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
-        numeroReservas += atraccion.getReservas().size(); 
+        // Número de reservas
+        int numeroReservas = 0; // Inicializa el contador de reservas
+        for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
+            numeroReservas += atraccion.getReservas().size(); // Suma el número de reservas de cada atracción
+        }
+        reporte.append("Número de Reservas Activas,").append(numeroReservas).append("\n"); // Agrega el número de reservas activas al reporte
+
+        // Generar archivo de reporte
+        try {
+            generarArchivoReporte(reporte.toString()); // Genera el archivo de reporte
+            JOptionPane.showMessageDialog(null, "Reporte generado correctamente en reporte_parque.csv."); // Mensaje de éxito
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage()); // Manejo de error
+        }
     }
-    reporte.append("Número de Reservas Activas,").append(numeroReservas).append("\n");
 
-    // Generar archivo de reporte
-    try {
-        generarArchivoReporte(reporte.toString());
-        JOptionPane.showMessageDialog(null, "Reporte generado correctamente en reporte_parque.csv.");
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage());
+    /**
+     * Genera un archivo CSV con el contenido del reporte.
+     *
+     * @param contenido el contenido que se va a escribir en el archivo
+     * @throws IOException si ocurre un error al escribir en el archivo
+     */
+    private void generarArchivoReporte(String contenido) throws IOException {
+        // Define el nombre del archivo y la ruta donde se guardará
+        String nombreArchivo = "reporte_parque.csv"; // Nombre del archivo de reporte
+        
+        // Usar un BufferedWriter para crear el archivo CSV
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+            // Escribir el contenido en el archivo
+            writer.write(contenido); // Escribe el contenido del reporte
+        }
     }
-}
-
-private void generarArchivoReporte(String contenido) throws IOException {
-    // Define el nombre del archivo y la ruta donde se guardará
-    String nombreArchivo = "reporte_parque.csv";
-    
-    // Usar un BufferedWriter para crear el archivo CSV
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
-        // Escribir el contenido en el archivo
-        writer.write(contenido);
-    }
-}
 }
