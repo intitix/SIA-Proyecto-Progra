@@ -1,128 +1,316 @@
-import java.util.HashMap;
+import java.util.HashMap; // Importa la clase HashMap para utilizar mapas de claves y valores
+import java.io.*; // Importa clases para entrada y salida de datos
+import java.text.ParseException; // Importa ParseException para manejar errores de análisis de fechas
+import java.text.SimpleDateFormat; // Importa SimpleDateFormat para formatear fechas
+import java.util.*; // Importa otras clases de utilidad
 
+/**
+ * Clase que representa un parque de atracciones, gestionando sus atracciones y reservas.
+ */
 public class Parque {
-    private String nombre;
-    private HashMap<String, Atraccion> mapaAtracciones;
-    private int horaApertura;
-    private int horaCierre;
+    private String nombre; // Nombre del parque
+    private HashMap<String, Atraccion> mapaAtracciones; // Mapa de atracciones, donde la clave es el nombre de la atracción
+    private int horaApertura; // Hora de apertura del parque
+    private int horaCierre; // Hora de cierre del parque
 
-    // CONSTRUCTOR
+    /**
+     * Constructor de la clase Parque.
+     *
+     * @param nombre el nombre del parque
+     * @param mapaAtracciones el mapa de atracciones del parque
+     * @param horaApertura la hora de apertura del parque
+     * @param horaCierre la hora de cierre del parque
+     */
     public Parque(String nombre, HashMap<String, Atraccion> mapaAtracciones, int horaApertura, int horaCierre) {
-        this.nombre = nombre;
-        this.mapaAtracciones = new HashMap<>(mapaAtracciones);
-        this.horaApertura = horaApertura;
-        this.horaCierre = horaCierre;
+        this.nombre = nombre; // Inicializa el nombre del parque
+        this.mapaAtracciones = new HashMap<>(mapaAtracciones); // Inicializa el mapa de atracciones
+        this.horaApertura = horaApertura; // Inicializa la hora de apertura
+        this.horaCierre = horaCierre; // Inicializa la hora de cierre
     }
 
     // GETTERS
+    /**
+     * Obtiene el nombre del parque.
+     *
+     * @return el nombre del parque
+     */
     public String getNombre() {
-        return nombre;
+        return nombre; // Retorna el nombre del parque
     }
 
+    /**
+     * Obtiene el mapa de atracciones del parque.
+     *
+     * @return el mapa de atracciones
+     */
     public HashMap<String, Atraccion> getMapaAtracciones() {
-        return new HashMap<>(mapaAtracciones);
+        return new HashMap<>(mapaAtracciones); // Retorna una copia del mapa de atracciones
     }
 
+    /**
+     * Obtiene la hora de apertura del parque.
+     *
+     * @return la hora de apertura
+     */
     public int getHoraApertura() {
-        return horaApertura;
+        return horaApertura; // Retorna la hora de apertura
     }
 
+    /**
+     * Obtiene la hora de cierre del parque.
+     *
+     * @return la hora de cierre
+     */
     public int getHoraCierre() {
-        return horaCierre;
+        return horaCierre; // Retorna la hora de cierre
     }
 
     // SETTERS
+    /**
+     * Establece la hora de apertura del parque.
+     *
+     * @param horaApertura la nueva hora de apertura
+     */
     public void setHoraApertura(int horaApertura) {
-        this.horaApertura = horaApertura;
+        this.horaApertura = horaApertura; // Actualiza la hora de apertura
     }
 
+    /**
+     * Establece la hora de cierre del parque.
+     *
+     * @param horaCierre la nueva hora de cierre
+     */
     public void setHoraCierre(int horaCierre) {
-        this.horaCierre = horaCierre;
+        this.horaCierre = horaCierre; // Actualiza la hora de cierre
     }
 
+    /**
+     * Establece el nombre del parque.
+     *
+     * @param nombre el nuevo nombre del parque
+     */
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre; // Actualiza el nombre del parque
     }
 
+    /**
+     * Establece el mapa de atracciones del parque.
+     *
+     * @param mapaAtracciones el nuevo mapa de atracciones
+     */
     public void setMapaAtracciones(HashMap<String, Atraccion> mapaAtracciones) {
-        this.mapaAtracciones = new HashMap<>(mapaAtracciones);
+        this.mapaAtracciones = new HashMap<>(mapaAtracciones); // Actualiza el mapa de atracciones
+    }
+
+    /**
+     * Carga las atracciones desde un archivo CSV.
+     *
+     * @param archivo el nombre del archivo CSV
+     * @throws IOException si ocurre un error al leer el archivo
+     */
+    public void cargarDatos(String archivo) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(archivo), "UTF-8")); // Lee el archivo CSV
+        String linea;
+
+        // Lee cada línea del archivo
+        while ((linea = reader.readLine()) != null) {
+            String[] datos = linea.split(","); // Separa la línea por comas
+            String nombreAtraccion = datos[0].trim(); // Obtiene el nombre de la atracción
+            int capacidad = Integer.parseInt(datos[1].trim()); // Obtiene la capacidad de la atracción
+            int duracion = Integer.parseInt(datos[2].trim()); // Obtiene la duración de la atracción
+
+            Atraccion atraccion = new Atraccion(nombreAtraccion, capacidad, duracion); // Crea una nueva atracción
+            mapaAtracciones.put(nombreAtraccion, atraccion); // Agrega la atracción al mapa
+            System.out.println("Cargada atracción: " + nombreAtraccion); // Imprime la atracción cargada
+        }
+        reader.close(); // Cierra el lector
+    }
+
+    /**
+     * Guarda las atracciones en un archivo CSV.
+     *
+     * @param archivo el nombre del archivo CSV
+     * @throws IOException si ocurre un error al escribir en el archivo
+     */
+    public void guardarDatos(String archivo) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(archivo)); // Crea un escritor para el archivo
+
+        // Escribe cada atracción en el archivo CSV
+        for (Atraccion atraccion : mapaAtracciones.values()) {
+            writer.write(atraccion.getNombre() + "," + atraccion.getCapacidad() + "," + atraccion.getDuracion());
+            writer.newLine(); // Agrega una nueva línea
+        }
+        writer.close(); // Cierra el escritor
+    }
+
+    /**
+     * Carga las reservas desde un archivo CSV.
+     *
+     * @param archivo el nombre del archivo CSV
+     * @throws IOException si ocurre un error al leer el archivo
+     */
+    public void cargarDatosReservas(String archivo) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(archivo), "UTF-8")); // Lee el archivo CSV
+        String linea;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm"); // Formato de fecha
+
+        // Lee cada línea del archivo
+        while ((linea = reader.readLine()) != null) {
+            String[] datos = linea.split(","); // Separa la línea por comas
+            String nombreAtraccion = datos[0].trim(); // Obtiene el nombre de la atracción
+            int grupoPersonas = Integer.parseInt(datos[1].trim()); // Obtiene el número de personas
+            Date fechaHora = null; // Inicializa la fecha y hora
+            
+            try {
+                fechaHora = sdf.parse(datos[2].trim()); // Parsea la fecha y hora
+            } catch (ParseException e) {
+                System.err.println("Error al analizar la fecha: " + e.getMessage()); // Imprime el error de análisis de fecha
+            }
+
+            // Busca la atracción y crea la reserva
+            Atraccion atraccion = buscarAtraccion(nombreAtraccion); // Busca la atracción por nombre
+            if (atraccion != null) {
+                Reserva reserva = new Reserva(grupoPersonas, atraccion, fechaHora); // Crea una nueva reserva
+                agregarReservaAAtraccion(nombreAtraccion, reserva); // Agrega la reserva a la atracción
+            } else {
+                System.err.println("La atracción '" + nombreAtraccion + "' no se encontró al cargar reservas."); // Imprime el error si no se encuentra la atracción
+            }
+        }
+        reader.close(); // Cierra el lector
+    }
+
+    /**
+     * Guarda las reservas en un archivo CSV.
+     *
+     * @param archivo el nombre del archivo CSV
+     * @throws IOException si ocurre un error al escribir en el archivo
+     */
+    public void guardarDatosReservas(String archivo) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(archivo)); // Crea un escritor para el archivo
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm"); // Formato de fecha
+
+        // Escribe cada reserva en el archivo CSV
+        for (Atraccion atraccion : mapaAtracciones.values()) {
+            for (Reserva reserva : atraccion.getReservas()) {
+                writer.write(atraccion.getNombre() + "," + reserva.getGrupoPersonas() + "," 
+                             + sdf.format(reserva.getFechaHora())); // Escribe los datos de la reserva
+                writer.newLine(); // Agrega una nueva línea
+            }
+        }
+        writer.close(); // Cierra el escritor
     }
 
     // Métodos para gestionar atracciones
+    /**
+     * Agrega una nueva atracción al parque.
+     *
+     * @param nombreAtraccion el nombre de la atracción
+     * @param atraccion la atracción a agregar
+     */
     public void agregarAtraccion(String nombreAtraccion, Atraccion atraccion) {
-        mapaAtracciones.put(nombreAtraccion, atraccion);
+        mapaAtracciones.put(nombreAtraccion, atraccion); // Agrega la atracción al mapa
     }
-    
-    
 
+    /**
+     * Elimina una atracción del parque.
+     *
+     * @param nombreAtraccion el nombre de la atracción a eliminar
+     * @return true si la atracción fue eliminada, false si no se encontró
+     */
     public boolean eliminarAtraccion(String nombreAtraccion) {
-    // Verifica si la atracción existe antes de intentar eliminarla
-    if (mapaAtracciones.containsKey(nombreAtraccion)) {
-        mapaAtracciones.remove(nombreAtraccion);
-        return true; // Indica que la atracción fue eliminada
-    } else {
-        return false; // Indica que la atracción no se encontró
-    }
+        // Verifica si la atracción existe antes de intentar eliminarla
+        if (mapaAtracciones.containsKey(nombreAtraccion)) {
+            mapaAtracciones.remove(nombreAtraccion); // Elimina la atracción del mapa
+            return true; // Indica que la atracción fue eliminada
+        } else {
+            return false; // Indica que la atracción no se encontró
+        }
     }
    
+    /**
+     * Busca una atracción por su nombre.
+     *
+     * @param nombreAtraccion el nombre de la atracción a buscar
+     * @return la atracción encontrada, o null si no se encontró
+     */
     public Atraccion buscarAtraccion(String nombreAtraccion) {
-        
-    // Verifica si el mapa de atracciones contiene la atracción buscada
-    if (mapaAtracciones.containsKey(nombreAtraccion)) {
-        
-        // Retorna la atracción correspondiente
-        return mapaAtracciones.get(nombreAtraccion);
-    } else {
-        
-        return null; // O puedes lanzar una excepción
+        // Verifica si el mapa de atracciones contiene la atracción buscada
+        if (mapaAtracciones.containsKey(nombreAtraccion)) {
+            return mapaAtracciones.get(nombreAtraccion); // Retorna la atracción correspondiente
+        } else {
+            throw new NoSuchElementException("La atracción '" + nombreAtraccion + "' no se encontró."); // Lanza excepción si no se encuentra
+        }
     }
-}
 
     // Métodos para gestionar reservas de una atracción específica
+    /**
+     * Agrega una reserva a una atracción.
+     *
+     * @param nombreAtraccion el nombre de la atracción
+     * @param reserva la reserva a agregar
+     */
     public void agregarReservaAAtraccion(String nombreAtraccion, Reserva reserva) {
-        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion);
+        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion); // Busca la atracción
         if (atraccion != null) {
-            atraccion.agregarReserva(reserva);
+            atraccion.agregarReserva(reserva); // Agrega la reserva a la atracción
         } else {
-            System.out.println("La atracción no existe.");
+            System.out.println("La atracción no existe."); // Mensaje si la atracción no se encuentra
         }
     }
 
+    /**
+     * Elimina una reserva de una atracción.
+     *
+     * @param nombreAtraccion el nombre de la atracción
+     * @param reserva la reserva a eliminar
+     */
     public void eliminarReservaDeAtraccion(String nombreAtraccion, Reserva reserva) {
-        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion);
+        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion); // Busca la atracción
         if (atraccion != null) {
-            atraccion.eliminarReserva(reserva);
+            atraccion.eliminarReserva(reserva); // Elimina la reserva de la atracción
         } else {
-            System.out.println("La atracción no existe.");
+            System.out.println("La atracción no existe."); // Mensaje si la atracción no se encuentra
         }
     }
 
+    /**
+     * Muestra las reservas de una atracción específica.
+     *
+     * @param nombreAtraccion el nombre de la atracción
+     */
     public void mostrarReservasDeAtraccion(String nombreAtraccion) {
-        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion);
+        Atraccion atraccion = mapaAtracciones.get(nombreAtraccion); // Busca la atracción
         if (atraccion != null) {
-            System.out.println("Reservas para la atracción " + nombreAtraccion + ":");
-            atraccion.mostrarReservas();
+            System.out.println("Reservas para la atracción " + nombreAtraccion + ":"); // Mensaje informativo
+            atraccion.mostrarReservas(); // Muestra las reservas de la atracción
         } else {
-            System.out.println("La atracción no existe.");
+            System.out.println("La atracción no existe."); // Mensaje si la atracción no se encuentra
         }
     }
 
     // Método para mostrar solo la información básica del parque
+    /**
+     * Muestra la información básica del parque.
+     */
     public void mostrarInfo() {
-        System.out.println("Nombre del Parque: " + nombre);
-        System.out.println("Horario: " + horaApertura + " - " + horaCierre);
+        System.out.println("Nombre del Parque: " + nombre); // Muestra el nombre del parque
+        System.out.println("Horario: " + horaApertura + " - " + horaCierre); // Muestra el horario
     }
 
-    // Sobrecarga de método para mostrar la información del parque + atracciones
+    /**
+     * Sobrecarga de método para mostrar la información del parque junto con sus atracciones.
+     *
+     * @param mostrarAtracciones indica si se deben mostrar las atracciones o no
+     */
     public void mostrarInfo(boolean mostrarAtracciones) {
-        mostrarInfo();  // Llamar al método de información básica
+        mostrarInfo(); // Llama al método de información básica
         if (mostrarAtracciones) {
-            System.out.println("Atracciones:");
+            System.out.println("Atracciones:"); // Mensaje informativo
             for (Atraccion atraccion : mapaAtracciones.values()) {
-                atraccion.mostrarAtraccion();
+                atraccion.mostrarAtraccion(); // Muestra la atracción
             }
         } else {
-            System.out.println("Atracciones no mostradas.");
+            System.out.println("Atracciones no mostradas."); // Mensaje si no se muestran las atracciones
         }
     }
 }
