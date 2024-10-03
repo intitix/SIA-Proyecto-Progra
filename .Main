@@ -1,87 +1,161 @@
-import javax.swing.*;
-import java.awt.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import javax.swing.*; // Importa la biblioteca Swing para crear interfaces gráficas
+import java.awt.*; // Importa la biblioteca AWT para componentes de interfaz gráfica
+import java.text.ParseException; // Importa ParseException para manejar errores de análisis de fechas
+import java.util.Date; // Importa Date para trabajar con fechas
+import java.text.SimpleDateFormat; // Importa SimpleDateFormat para formatear fechas
+import java.util.HashMap; // Importa HashMap para almacenar pares clave-valor
+import java.io.IOException; // Importa IOException para manejar errores de entrada/salida
+import java.util.NoSuchElementException; // Importa NoSuchElementException para manejar excepciones de elementos no encontrados
 
-
+/**
+ * Clase principal que inicializa el sistema y gestiona las atracciones y reservas del parque.
+ */
 public class Main {
-    private static JFrame frame;
+    private static JFrame frame; // Ventana principal de la interfaz gráfica
 
+    /**
+     * Método principal que ejecuta la aplicación.
+     *
+     * @param args los argumentos de línea de comandos
+     * @throws ParseException si hay un error al analizar la fecha
+     */
     public static void main(String[] args) throws ParseException {
-        // Crear mapa de atracciones y agregar atracciones precargadas
-        HashMap<String, Atraccion> atracciones = new HashMap<>();
-        atracciones.put("Montaña rusa", new Atraccion("Montaña rusa", 30, 10));
-        atracciones.put("Carrusel", new Atraccion("Carrusel", 20, 15));
+        // Crear mapa de atracciones
+        HashMap<String, Atraccion> atracciones = new HashMap<>(); // Mapa para almacenar las atracciones del parque
+        
+        // Crear un formato de fecha
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm"); // Formato de fecha para las reservas
 
         // Inicializar parque
-        Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
-
-        // Crear un formato de fecha
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-
-        // Crear reservas
-        Reserva reserva1 = new Reserva(10, atracciones.get("Montaña rusa"), sdf.parse("10/09/2024 14:00"));
-        Reserva reserva2 = new Reserva(15, atracciones.get("Montaña rusa"), sdf.parse("10/09/2024 15:00"));
-
-        // Agregar reservas a la atracción "Montaña rusa"
-        atracciones.get("Montaña rusa").agregarReserva(reserva1);
-        atracciones.get("Montaña rusa").agregarReserva(reserva2);
+        Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18); // Crear una nueva instancia de Parque
+        
+        // Cargar datos de atracciones y reservas desde archivos CSV
+        try {
+            parqueCentral.cargarDatos("atracciones.csv"); // Cargar atracciones desde el archivo CSV
+            System.out.println("Datos CSV de atracciones cargados Exitosamente"); // Mensaje de éxito
+            
+            // Imprimir las atracciones cargadas
+            for (String key : parqueCentral.getMapaAtracciones().keySet()) {
+                System.out.println(" - " + key); // Mostrar el nombre de cada atracción
+            }
+            
+            // Cargar reservas
+            parqueCentral.cargarDatosReservas("reservas.csv"); // Cargar reservas desde el archivo CSV
+            System.out.println("Datos CSV de reservas cargados Exitosamente"); // Mensaje de éxito
+            
+            // Imprimir las reservas cargadas
+            for (Atraccion atraccion : parqueCentral.getMapaAtracciones().values()) {
+                System.out.println("Reservas para la atracción: " + atraccion.getNombre()); // Mostrar el nombre de la atracción
+                for (Reserva reserva : atraccion.getReservas()) {
+                    System.out.println(" - " + reserva); // Mostrar la información de cada reserva
+                }
+            }
+            
+        } catch (IOException e) {
+            System.err.println("Error al cargar los datos: " + e.getMessage()); // Mensaje de error en la carga de datos
+            
+            // Valores iniciales en caso de no encontrar el archivo CSV
+            atracciones.put("Montaña rusa", new Atraccion("Montaña rusa", 30, 10)); // Agregar atracción por defecto
+            atracciones.put("Carrusel", new Atraccion("Carrusel", 20, 15)); // Agregar atracción por defecto
+        }
+        
+        // Crear reservas solo si la atracción está presente y no se han agregado previamente
+        Atraccion montanaRusa = parqueCentral.buscarAtraccion("Montaña rusa"); // Buscar la atracción "Montaña rusa"
+        if (montanaRusa != null) { // Si la atracción fue encontrada
+            try {
+                // Convertir la fecha antes de la verificación
+                Date fechaReserva1 = sdf.parse("10/09/2024 14:00"); // Parsear la fecha de la primera reserva
+                Date fechaReserva2 = sdf.parse("10/09/2024 15:00"); // Parsear la fecha de la segunda reserva
+                
+                // Verificar si la reserva ya existe antes de agregarla
+                if (montanaRusa.getReservas().stream().noneMatch(r -> r.getGrupoPersonas() == 10 && r.getFechaHora().equals(fechaReserva1))) {
+                    Reserva reserva1 = new Reserva(10, montanaRusa, fechaReserva1); // Crear nueva reserva
+                    montanaRusa.agregarReserva(reserva1); // Agregar reserva a la atracción
+                }
+                if (montanaRusa.getReservas().stream().noneMatch(r -> r.getGrupoPersonas() == 15 && r.getFechaHora().equals(fechaReserva2))) {
+                    Reserva reserva2 = new Reserva(15, montanaRusa, fechaReserva2); // Crear nueva reserva
+                    montanaRusa.agregarReserva(reserva2); // Agregar reserva a la atracción
+                }
+            } catch (ParseException e) {
+                System.err.println("Error al crear reservas: " + e.getMessage()); // Mensaje de error al crear reservas
+            } catch (NoSuchElementException | IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(frame, e.getMessage()); // Mostrar error en un cuadro de diálogo
+            }
+        } else {
+            System.err.println("La atracción 'Montaña rusa' no se encontró al agregar reservas."); // Mensaje si no se encuentra la atracción
+        }
 
         // Llamar al menú principal
-        mostrarMenuPrincipal(parqueCentral);
+        mostrarMenuPrincipal(parqueCentral); // Muestra el menú principal
+        
+        // Agregar ShutdownHook para guardar los datos al salir
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                parqueCentral.guardarDatos("atracciones.csv"); // Guardar atracciones en el archivo CSV
+                parqueCentral.guardarDatosReservas("reservas.csv"); // Guardar reservas en el archivo CSV
+            } catch (IOException e) {
+                System.err.println("Error al guardar los datos: " + e.getMessage()); // Mensaje de error al guardar datos
+            }
+        }));
     }
 
+    /**
+     * Muestra el menú principal de la aplicación.
+     *
+     * @param parqueCentral el parque para el que se mostrará el menú
+     */
     public static void mostrarMenuPrincipal(Parque parqueCentral) {
         // Crear interfaz gráfica con JFrame
-        frame = new JFrame("Menú Principal - SIA");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new GridLayout(5, 1));
-        frame.setLocationRelativeTo(null); // Para centrar el JFrame en la pantalla
+        frame = new JFrame("Menú Principal - SIA"); // Inicializa la ventana del menú principal
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Permite cerrar solo esta ventana
+        frame.setSize(400, 300); // Establece el tamaño de la ventana
+        frame.setLayout(new GridLayout(5, 1)); // Crea un layout con 5 filas para los botones
+        frame.setLocationRelativeTo(null); // Centra el JFrame en la pantalla
 
-        JLabel lblTitulo = new JLabel("Bienvenido a PUCV LANDIA", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-        frame.add(lblTitulo);
+        JLabel lblTitulo = new JLabel("Bienvenido a PUCV LANDIA", SwingConstants.CENTER); // Título del menú
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18)); // Establece el estilo de la fuente
+        frame.add(lblTitulo); // Añade el título al frame
 
-        JButton btnGestionAtracciones = new JButton("Gestión de Atracciones");
-        JButton btnGestionReservas = new JButton("Gestión de Reservas");
-        JButton btnGestionParque = new JButton("Gestión de Parque y Estadísticas");
-        JButton btnSalir = new JButton("Salir");
+        // Crear botones para el menú
+        JButton btnGestionAtracciones = new JButton("Gestión de Atracciones"); // Botón para gestionar atracciones
+        JButton btnGestionReservas = new JButton("Gestión de Reservas"); // Botón para gestionar reservas
+        JButton btnGestionParque = new JButton("Gestión de Parque y Estadísticas"); // Botón para gestionar el parque
+        JButton btnSalir = new JButton("Salir"); // Botón para salir de la aplicación
 
-        frame.add(btnGestionAtracciones);
-        frame.add(btnGestionReservas);
-        frame.add(btnGestionParque);
-        frame.add(btnSalir);
+        // Añadir botones al frame
+        frame.add(btnGestionAtracciones); // Añade el botón de gestión de atracciones
+        frame.add(btnGestionReservas); // Añade el botón de gestión de reservas
+        frame.add(btnGestionParque); // Añade el botón de gestión del parque
+        frame.add(btnSalir); // Añade el botón de salir
 
         // Acción del botón "Gestión de Atracciones"
         btnGestionAtracciones.addActionListener(e -> {
             frame.dispose(); // Cerrar menú principal
-            GestorAtracciones gestorAtracciones = new GestorAtracciones(parqueCentral);
+            new GestorAtracciones(parqueCentral); // Iniciar el gestor de atracciones
         });
 
         // Acción del botón "Gestión de Reservas"
         btnGestionReservas.addActionListener(e -> {
             frame.dispose(); // Cerrar menú principal
-            GestorReservas gestorReservas = new GestorReservas(parqueCentral);
+            new GestorReservas(parqueCentral); // Iniciar el gestor de reservas
         });
 
         // Acción del botón "Gestión de Parque y Estadísticas"
         btnGestionParque.addActionListener(e -> {
             frame.dispose(); // Cerrar menú principal
-            GestorParque gestorParque = new GestorParque(parqueCentral);
+            new GestorParque(parqueCentral); // Iniciar el gestor del parque
         });
 
         // Acción del botón "Salir"
         btnSalir.addActionListener(e -> {
-            int respuesta = JOptionPane.showConfirmDialog(frame, "¿Está seguro que desea salir?", "Confirmación", JOptionPane.YES_NO_OPTION);
-            if (respuesta == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(frame, "Saliendo...");
+            int respuesta = JOptionPane.showConfirmDialog(frame, "¿Está seguro que desea salir?", "Confirmación", JOptionPane.YES_NO_OPTION); // Confirmar salida
+            if (respuesta == JOptionPane.YES_OPTION) { // Si se confirma la salida
+                JOptionPane.showMessageDialog(frame, "Saliendo..."); // Mensaje de salida
                 System.exit(0); // Cerrar la aplicación
             }
         });
 
         // Mostrar la ventana
-        frame.setVisible(true);
+        frame.setVisible(true); // Muestra la ventana del menú
     }
 }
