@@ -1,12 +1,14 @@
+import javax.swing.*;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+
 
 public class Main {
+    private static JFrame frame;
+
     public static void main(String[] args) throws ParseException {
-        
         // Crear mapa de atracciones y agregar atracciones precargadas
         HashMap<String, Atraccion> atracciones = new HashMap<>();
         atracciones.put("Montaña rusa", new Atraccion("Montaña rusa", 30, 10));
@@ -14,7 +16,7 @@ public class Main {
 
         // Inicializar parque
         Parque parqueCentral = new Parque("PUCV LANDIA", atracciones, 8, 18);
-             
+
         // Crear un formato de fecha
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
@@ -26,56 +28,60 @@ public class Main {
         atracciones.get("Montaña rusa").agregarReserva(reserva1);
         atracciones.get("Montaña rusa").agregarReserva(reserva2);
 
-        // Lector
-        Scanner lector = new Scanner(System.in);
-        
-        int opcion;
-        
-        while (true) {
-            // Limpiar pantalla
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-            parqueCentral.mostrarInfo();
-            System.out.println("MENU");
-            System.out.println("1. Gestión de Atracciones");
-            System.out.println("2. Gestión de Reservas");
-            System.out.println("3. Gestión de Parque y Estadísticas");
-            System.out.println("4. Salir");
-            System.out.print("Escoja una opción: ");
-            
-            try {
-                opcion = lector.nextInt();
-                lector.nextLine(); // Limpiar el buffer
+        // Llamar al menú principal
+        mostrarMenuPrincipal(parqueCentral);
+    }
 
-                switch (opcion) {
-                    case 1 -> {
-                        // Instanciar Gestor y usar método
-                        GestorAtracciones gestor = new GestorAtracciones(parqueCentral, lector);
-                        gestor.gestionar();
-                    }
-                    case 2 -> {
-                        GestorReservas gestor = new GestorReservas(parqueCentral, lector);
-                        gestor.gestionar();
-                    }
-                    case 3 -> {
-                        GestorParque gestorParque = new GestorParque(parqueCentral, lector);
-                        gestorParque.gestionarParque();
-                    }
-                    case 4 -> {
-                        System.out.print("¿Está seguro que desea salir? (s/n): ");
-                        String confirmacion = lector.nextLine();
-                        if (confirmacion.equalsIgnoreCase("s")) {
-                            System.out.println("Saliendo...");
-                            lector.close();
-                            return; // Salir del programa
-                        }
-                    }
-                    default -> System.out.println("Opción inválida. Intente de nuevo.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Error: Entrada inválida. Por favor, ingrese un número.");
-                lector.nextLine(); // Limpiar el buffer de entrada
+    public static void mostrarMenuPrincipal(Parque parqueCentral) {
+        // Crear interfaz gráfica con JFrame
+        frame = new JFrame("Menú Principal - SIA");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setLayout(new GridLayout(5, 1));
+        frame.setLocationRelativeTo(null); // Para centrar el JFrame en la pantalla
+
+        JLabel lblTitulo = new JLabel("Bienvenido a PUCV LANDIA", SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+        frame.add(lblTitulo);
+
+        JButton btnGestionAtracciones = new JButton("Gestión de Atracciones");
+        JButton btnGestionReservas = new JButton("Gestión de Reservas");
+        JButton btnGestionParque = new JButton("Gestión de Parque y Estadísticas");
+        JButton btnSalir = new JButton("Salir");
+
+        frame.add(btnGestionAtracciones);
+        frame.add(btnGestionReservas);
+        frame.add(btnGestionParque);
+        frame.add(btnSalir);
+
+        // Acción del botón "Gestión de Atracciones"
+        btnGestionAtracciones.addActionListener(e -> {
+            frame.dispose(); // Cerrar menú principal
+            GestorAtracciones gestorAtracciones = new GestorAtracciones(parqueCentral);
+        });
+
+        // Acción del botón "Gestión de Reservas"
+        btnGestionReservas.addActionListener(e -> {
+            frame.dispose(); // Cerrar menú principal
+            GestorReservas gestorReservas = new GestorReservas(parqueCentral);
+        });
+
+        // Acción del botón "Gestión de Parque y Estadísticas"
+        btnGestionParque.addActionListener(e -> {
+            frame.dispose(); // Cerrar menú principal
+            GestorParque gestorParque = new GestorParque(parqueCentral);
+        });
+
+        // Acción del botón "Salir"
+        btnSalir.addActionListener(e -> {
+            int respuesta = JOptionPane.showConfirmDialog(frame, "¿Está seguro que desea salir?", "Confirmación", JOptionPane.YES_NO_OPTION);
+            if (respuesta == JOptionPane.YES_OPTION) {
+                JOptionPane.showMessageDialog(frame, "Saliendo...");
+                System.exit(0); // Cerrar la aplicación
             }
-        }
+        });
+
+        // Mostrar la ventana
+        frame.setVisible(true);
     }
 }
