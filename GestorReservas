@@ -1,215 +1,260 @@
-import javax.swing.*;
-import java.awt.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.List;
+import javax.swing.*; // Importa la biblioteca Swing para la interfaz gráfica
+import java.awt.*; // Importa la biblioteca AWT para componentes de interfaz gráfica
+import java.text.ParseException; // Importa ParseException para manejar errores de análisis de fechas
+import java.text.SimpleDateFormat; // Importa SimpleDateFormat para formatear fechas
+import java.util.Date; // Importa Date para trabajar con fechas
+import java.util.logging.Level; // Importa Level para manejo de niveles de logging
+import java.util.logging.Logger; // Importa Logger para registrar mensajes
+import java.util.List; // Importa List para trabajar con listas
+import java.util.NoSuchElementException; // Importa NoSuchElementException para manejar excepciones de elementos no encontrados
 
+/**
+ * Clase que gestiona las reservas en el parque.
+ */
 public class GestorReservas {
-    private final Parque parque;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    private JFrame frame;
+    private final Parque parque; // Referencia al objeto Parque que se gestiona
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm"); // Formato de fecha para reservas
+    private JFrame frame; // Ventana principal del gestor de reservas
 
+    /**
+     * Constructor que inicializa el gestor de reservas.
+     *
+     * @param parque el parque que se va a gestionar
+     */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public GestorReservas(Parque parque) {
-        this.parque = parque;
-        gestionar();
+        this.parque = parque; // Asigna el parque a la variable de instancia
+        gestionar(); // Llama al método gestionar para inicializar la interfaz
     }
 
+    /**
+     * Método que gestiona la interfaz gráfica para las operaciones de reservas.
+     */
     public void gestionar() {
-        frame = new JFrame("Menu Reservas");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new GridLayout(6, 1));
-        frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+        frame = new JFrame("Menu Reservas"); // Inicializa la ventana del gestor
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Permite cerrar solo esta ventana
+        frame.setSize(400, 300); // Establece el tamaño de la ventana
+        frame.setLayout(new GridLayout(6, 1)); // Crea un layout con 6 filas para los botones
+        frame.setLocationRelativeTo(null); // Centra la ventana en la pantalla
 
-        JLabel lblTitulo = new JLabel("Gestión de Reservas", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-        frame.add(lblTitulo);
+        JLabel lblTitulo = new JLabel("Gestión de Reservas", SwingConstants.CENTER); // Título de la ventana
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18)); // Establece el estilo de la fuente
+        frame.add(lblTitulo); // Añade el título al frame
 
-        JButton btnCrearReserva = new JButton("Crear Reserva");
-        JButton btnMostrarReservas = new JButton("Mostrar Reservas");
-        JButton btnBuscarReservasDia = new JButton("Buscar Reservas por Día");
-        JButton btnEliminarReserva = new JButton("Eliminar Reserva");
-        JButton btnVolver = new JButton("Volver al menú principal");
+        // Crear botones para las opciones del menú
+        JButton btnCrearReserva = new JButton("Crear Reserva"); // Botón para crear una nueva reserva
+        JButton btnMostrarReservas = new JButton("Mostrar Reservas"); // Botón para mostrar todas las reservas
+        JButton btnBuscarReservasDia = new JButton("Buscar Reservas por Día"); // Botón para buscar reservas por día
+        JButton btnEliminarReserva = new JButton("Eliminar Reserva"); // Botón para eliminar una reserva
+        JButton btnVolver = new JButton("Volver al menú principal"); // Botón para volver al menú principal
 
-        frame.add(btnCrearReserva);
-        frame.add(btnMostrarReservas);
-        frame.add(btnBuscarReservasDia);
-        frame.add(btnEliminarReserva);
-        frame.add(btnVolver);
+        // Añadir botones al frame
+        frame.add(btnCrearReserva); // Añade el botón de crear reserva
+        frame.add(btnMostrarReservas); // Añade el botón de mostrar reservas
+        frame.add(btnBuscarReservasDia); // Añade el botón de buscar reservas por día
+        frame.add(btnEliminarReserva); // Añade el botón de eliminar reserva
+        frame.add(btnVolver); // Añade el botón de volver al menú principal
 
         // Acción del botón "Crear Reserva"
-        btnCrearReserva.addActionListener(e -> crearReserva());
+        btnCrearReserva.addActionListener(e -> crearReserva()); // Llama al método crearReserva cuando se presiona
 
         // Acción del botón "Mostrar Reservas"
-        btnMostrarReservas.addActionListener(e -> mostrarReservas());
+        btnMostrarReservas.addActionListener(e -> mostrarReservas()); // Llama al método mostrarReservas cuando se presiona
 
         // Acción del botón "Buscar Reservas por Día"
         btnBuscarReservasDia.addActionListener(e -> {
             try {
-                buscarReservasPorDia();
+                buscarReservasPorDia(); // Llama al método buscarReservasPorDia cuando se presiona
             } catch (ParseException ex) {
-                Logger.getLogger(GestorReservas.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GestorReservas.class.getName()).log(Level.SEVERE, null, ex); // Registra el error si ocurre una excepción
             }
         });
 
         // Acción del botón "Eliminar Reserva"
-        btnEliminarReserva.addActionListener(e -> eliminarReserva());
+        btnEliminarReserva.addActionListener(e -> eliminarReserva()); // Llama al método eliminarReserva cuando se presiona
 
         // Acción del botón "Volver"
         btnVolver.addActionListener(e -> {
-            frame.dispose(); // Cerrar la ventana actual y volver al menú principal
-            Main.mostrarMenuPrincipal(parque);
+            frame.dispose(); // Cierra la ventana actual y vuelve al menú principal
+            Main.mostrarMenuPrincipal(parque); // Regresa al menú principal
         });
 
         // Mostrar la ventana
-        frame.setVisible(true);
+        frame.setVisible(true); // Muestra la ventana del gestor
     }
 
+    /**
+     * Método que permite crear una nueva reserva.
+     */
     private void crearReserva() {
-        JTextField txtAtraccion = new JTextField();
-        JTextField txtGrupoPersonas = new JTextField();
-        JTextField txtFechaHora = new JTextField();
+        // Crear campos de texto para ingresar los datos de la reserva
+        JTextField txtAtraccion = new JTextField(); // Campo para el nombre de la atracción
+        JTextField txtGrupoPersonas = new JTextField(); // Campo para el número de personas en el grupo
+        JTextField txtFechaHora = new JTextField(); // Campo para la fecha y hora de la reserva
 
+        // Crear un diálogo para ingresar los datos de la reserva
         Object[] message = {
             "Nombre de la Atracción:", txtAtraccion,
             "Grupo de Personas:", txtGrupoPersonas,
             "Fecha y Hora (dd/MM/yyyy HH:mm):", txtFechaHora
         };
 
+        // Mostrar el diálogo y esperar la respuesta del usuario
         int option = JOptionPane.showConfirmDialog(null, message, "Crear Reserva", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
+        if (option == JOptionPane.OK_OPTION) { // Si el usuario confirma la acción
             try {
-                String nombreAtraccion = txtAtraccion.getText();
-                int grupoPersonas = Integer.parseInt(txtGrupoPersonas.getText());
-                Date fechaHora = sdf.parse(txtFechaHora.getText());
+                // Obtener los datos ingresados por el usuario
+                String nombreAtraccion = txtAtraccion.getText(); // Nombre de la atracción
+                int grupoPersonas = Integer.parseInt(txtGrupoPersonas.getText()); // Número de personas
+                Date fechaHora = sdf.parse(txtFechaHora.getText()); // Fecha y hora de la reserva
 
+                // Buscar la atracción en el parque
                 Atraccion atraccion = parque.buscarAtraccion(nombreAtraccion);
-                if (atraccion != null) {
-                    if (grupoPersonas > atraccion.getCapacidad()) {
-                        JOptionPane.showMessageDialog(frame, "El grupo de personas supera la capacidad de la atracción.");
+                if (atraccion != null) { // Si la atracción existe
+                    if (grupoPersonas > atraccion.getCapacidad()) { // Si el grupo excede la capacidad de la atracción
+                        throw new IllegalArgumentException("El grupo de personas supera la capacidad de la atracción."); // Lanza excepción
                     } else {
+                        // Crear una nueva reserva
                         Reserva reserva = new Reserva(grupoPersonas, atraccion, fechaHora);
-                        parque.agregarReservaAAtraccion(nombreAtraccion, reserva);
-                        JOptionPane.showMessageDialog(frame, "Reserva creada exitosamente.");
+                        parque.agregarReservaAAtraccion(nombreAtraccion, reserva); // Agrega la reserva a la atracción
+                        JOptionPane.showMessageDialog(frame, "Reserva creada exitosamente."); // Mensaje de éxito
                     }
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Atracción no encontrada.");
+                    throw new NoSuchElementException("Atracción no encontrada."); // Lanza excepción si la atracción no existe
                 }
             } catch (ParseException | NumberFormatException ex) {
+                // Manejo de errores si la entrada es inválida
                 JOptionPane.showMessageDialog(frame, "Error: Entrada inválida. Por favor, verifique los datos.");
             }
         }
     }
 
- private void mostrarReservas() {
-    StringBuilder listaReservas = new StringBuilder("Reservas en todas las atracciones:\n");
+    /**
+     * Método que muestra todas las reservas en el parque.
+     */
+    private void mostrarReservas() {
+        StringBuilder listaReservas = new StringBuilder("Reservas en todas las atracciones:\n"); // StringBuilder para construir el mensaje
 
-    boolean hayReservas = false; // Bandera para verificar si hay reservas
+        boolean hayReservas = false; // Bandera para verificar si hay reservas
 
-    for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
-        if (!atraccion.getReservas().isEmpty()) {
-            hayReservas = true; // Hay al menos una reserva
-            listaReservas.append("Atracción: ").append(atraccion.getNombre()).append(":\n");
-            for (Reserva reserva : atraccion.getReservas()) {
-                listaReservas.append("  Grupo de personas: ")
-                             .append(reserva.getGrupoPersonas())
-                             .append(" - Fecha y Hora: ")
-                             .append(reserva.getFechaHora().toString()) // Puedes formatear la fecha si prefieres
-                             .append("\n");
+        // Iterar sobre cada atracción en el parque
+        for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
+            if (!atraccion.getReservas().isEmpty()) { // Si la atracción tiene reservas
+                hayReservas = true; // Hay al menos una reserva
+                listaReservas.append("Atracción: ").append(atraccion.getNombre()).append(":\n"); // Agrega el nombre de la atracción
+                for (Reserva reserva : atraccion.getReservas()) { // Itera sobre las reservas de la atracción
+                    listaReservas.append("  Grupo de personas: ") // Agrega información de la reserva
+                            .append(reserva.getGrupoPersonas())
+                            .append(" - Fecha y Hora: ")
+                            .append(sdf.format(reserva.getFechaHora())) // Formatea la fecha con SimpleDateFormat
+                            .append("\n");
+                }
             }
         }
+
+        // Si no hay reservas, se notifica al usuario
+        if (!hayReservas) {
+            listaReservas.append("No hay reservas en ninguna atracción.");
+        }
+
+        // Mostrar las reservas en un cuadro de diálogo
+        JOptionPane.showMessageDialog(null, listaReservas.toString());
     }
 
-    if (!hayReservas) {
-        listaReservas.append("No hay reservas en ninguna atracción.");
-    }
-
-    JOptionPane.showMessageDialog(null, listaReservas.toString());
-}
-
+    /**
+     * Método que busca reservas para un día específico.
+     *
+     * @throws ParseException si la fecha no se puede analizar
+     */
     private void buscarReservasPorDia() throws ParseException {
+        // Campo para ingresar la fecha
         JTextField txtFecha = new JTextField();
         Object[] message = {
             "Fecha (dd/MM/yyyy):", txtFecha
         };
 
+        // Mostrar el diálogo para ingresar la fecha
         int option = JOptionPane.showConfirmDialog(null, message, "Buscar Reservas por Día", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            String fechaStr = txtFecha.getText();
-            Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fechaStr);
+        if (option == JOptionPane.OK_OPTION) { // Si se confirma la acción
+            String fechaStr = txtFecha.getText(); // Obtener la fecha ingresada
+            Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fechaStr); // Convertir la cadena en Date
 
-            boolean hayReservas = false;
+            boolean hayReservas = false; // Bandera para verificar si hay reservas encontradas
+            // Iterar sobre cada atracción en el parque
             for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
-                for (Reserva reserva : atraccion.getReservas()) {
-                    SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy");
-                    if (sdfFecha.format(reserva.getFechaHora()).equals(fechaStr)) {
-                        JOptionPane.showMessageDialog(frame, "Atracción: " + atraccion.getNombre() + " - " + reserva);
-                        hayReservas = true;
+                for (Reserva reserva : atraccion.getReservas()) { // Iterar sobre las reservas de la atracción
+                    // Comparar la fecha de la reserva con la fechaBuscada
+                    if (reserva.getFechaHora().compareTo(fechaBuscada) == 0) {
+                        JOptionPane.showMessageDialog(frame, "Atracción: " + atraccion.getNombre() + " - " + reserva); // Muestra la reserva encontrada
+                        hayReservas = true; // Se encontró al menos una reserva
                     }
                 }
             }
 
+            // Si no se encontraron reservas, se notifica al usuario
             if (!hayReservas) {
                 JOptionPane.showMessageDialog(frame, "No se encontraron reservas para la fecha indicada.");
             }
         }
     }
 
-private void eliminarReserva() {
-    JTextField txtAtraccion = new JTextField();
-    Object[] message = {
-        "Nombre de la Atracción:", txtAtraccion
-    };
+    /**
+     * Método que permite eliminar una reserva.
+     */
+    private void eliminarReserva() {
+        JTextField txtAtraccion = new JTextField(); // Campo para ingresar el nombre de la atracción
+        Object[] message = {
+            "Nombre de la Atracción:", txtAtraccion
+        };
 
-    int option = JOptionPane.showConfirmDialog(null, message, "Eliminar Reserva", JOptionPane.OK_CANCEL_OPTION);
-    if (option == JOptionPane.OK_OPTION) {
-        String nombreAtraccion = txtAtraccion.getText();
-        Atraccion atraccion = parque.buscarAtraccion(nombreAtraccion);
-        
-        if (atraccion != null) {
-            // Crear una lista enumerada de reservas
-            List<Reserva> reservas = atraccion.getReservas();
-            if (!reservas.isEmpty()) {
-                StringBuilder opciones = new StringBuilder();
-                for (int i = 0; i < reservas.size(); i++) {
-                    opciones.append(i + 1).append(": Grupo de personas: ")
-                            .append(reservas.get(i).getGrupoPersonas())
-                            .append(" - Fecha y Hora: ")
-                            .append(reservas.get(i).getFechaHora().toString())
-                            .append("\n");
-                }
-                
-                String seleccion = (String) JOptionPane.showInputDialog(
-                    null,
-                    "Seleccione el número de la reserva a eliminar:\n" + opciones.toString(),
-                    "Eliminar Reserva",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    null,
-                    null
-                );
-
-                if (seleccion != null) {
-                    try {
-                        int indice = Integer.parseInt(seleccion) - 1;
-                        Reserva reservaAEliminar = reservas.get(indice);
-                        parque.eliminarReservaDeAtraccion(nombreAtraccion, reservaAEliminar);
-                        JOptionPane.showMessageDialog(frame, "Reserva eliminada exitosamente.");
-                    } catch (IndexOutOfBoundsException e) {
-                        JOptionPane.showMessageDialog(frame, "Selección inválida.");
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(frame, "Error en la selección. Asegúrese de elegir un número válido.");
+        // Mostrar el diálogo para ingresar el nombre de la atracción
+        int option = JOptionPane.showConfirmDialog(null, message, "Eliminar Reserva", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) { // Si se confirma la acción
+            String nombreAtraccion = txtAtraccion.getText(); // Obtener el nombre de la atracción
+            Atraccion atraccion = parque.buscarAtraccion(nombreAtraccion); // Buscar la atracción
+            
+            if (atraccion != null) { // Si la atracción existe
+                // Crear una lista enumerada de reservas
+                List<Reserva> reservas = atraccion.getReservas();
+                if (!reservas.isEmpty()) { // Si hay reservas para la atracción
+                    StringBuilder opciones = new StringBuilder(); // StringBuilder para mostrar opciones de reservas
+                    for (int i = 0; i < reservas.size(); i++) {
+                        opciones.append(i + 1).append(": Grupo de personas: ")
+                                .append(reservas.get(i).getGrupoPersonas())
+                                .append(" - Fecha y Hora: ")
+                                .append(sdf.format(reservas.get(i).getFechaHora())) // Formatear la fecha
+                                .append("\n");
                     }
+                    
+                    // Mostrar las reservas en un cuadro de diálogo
+                    String seleccion = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Seleccione el número de la reserva a eliminar:\n" + opciones.toString(),
+                        "Eliminar Reserva",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        null,
+                        null
+                    );
+
+                    if (seleccion != null) { // Si se seleccionó una reserva
+                        try {
+                            int indice = Integer.parseInt(seleccion) - 1; // Obtener el índice de la reserva
+                            Reserva reservaAEliminar = reservas.get(indice); // Obtener la reserva a eliminar
+                            parque.eliminarReservaDeAtraccion(nombreAtraccion, reservaAEliminar); // Eliminar la reserva
+                            JOptionPane.showMessageDialog(frame, "Reserva eliminada exitosamente."); // Mensaje de éxito
+                        } catch (IndexOutOfBoundsException e) { // Manejo de excepción si el índice es inválido
+                            JOptionPane.showMessageDialog(frame, "Selección inválida.");
+                        } catch (NumberFormatException e) { // Manejo de excepción si hay un error de formato
+                            JOptionPane.showMessageDialog(frame, "Error en la selección. Asegúrese de elegir un número válido.");
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "No hay reservas para esta atracción."); // Mensaje si no hay reservas
                 }
             } else {
-                JOptionPane.showMessageDialog(frame, "No hay reservas para esta atracción.");
+                JOptionPane.showMessageDialog(frame, "Atracción no encontrada."); // Mensaje si la atracción no existe
             }
-        } else {
-            JOptionPane.showMessageDialog(frame, "Atracción no encontrada.");
         }
     }
-}
 }
