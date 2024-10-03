@@ -1,132 +1,128 @@
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 
 public class GestorParque {
     private final Parque parque;
-    private final Scanner lector;
 
-    public GestorParque(Parque parque, Scanner lector) {
+    public GestorParque(Parque parque) {
         this.parque = parque;
-        this.lector = lector;
+        gestionar();
     }
 
-    public void gestionarParque() {
-        while (true) {
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-            System.out.println("GESTIÓN DEL PARQUE");
-            System.out.println("1. Cambiar nombre del parque");
-            System.out.println("2. Modificar horario de apertura y cierre");
-            System.out.println("3. Generar reporte");
-            System.out.println("4. Volver al menú principal");
-            System.out.print("Escoja una opción: ");
+private void gestionar() {
+    JFrame frame = new JFrame("Gestión del Parque");
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setSize(400, 300);
+    frame.setLayout(new GridLayout(4, 1)); // Cambiado a 6 filas para incluir el título y todos los botones
 
+    frame.setLocationRelativeTo(null); // Centrar la ventana en la pantalla
+
+    // Título
+    JLabel lblTitulo = new JLabel("Gestión del Parque", SwingConstants.CENTER);
+    lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
+    frame.add(lblTitulo);
+
+    // Crear botones
+    JButton btnModificarHorario = new JButton("Modificar Horario");
+    JButton btnGenerarReporte = new JButton("Generar Reporte");
+    JButton btnVolver = new JButton("Volver al Menú Principal");
+
+    // Agregar botones al frame
+    frame.add(btnModificarHorario);
+    frame.add(btnGenerarReporte);
+    frame.add(btnVolver); // Agregando el botón "Volver"
+
+    // Asignar acciones a los botones
+    btnModificarHorario.addActionListener(e -> modificarHorario());
+    btnGenerarReporte.addActionListener(e -> generarReporte());
+
+    // Acción del botón "Volver"
+    btnVolver.addActionListener(e -> {
+        frame.dispose(); // Cerrar la ventana actual
+        Main.mostrarMenuPrincipal(parque); // Regresar al menú principal
+    });
+
+    // Mostrar la ventana
+    frame.setVisible(true);
+}
+
+
+    private void modificarHorario() {
+        JPanel panel = new JPanel(new GridLayout(2, 2));
+        JTextField txtApertura = new JTextField();
+        JTextField txtCierre = new JTextField();
+        panel.add(new JLabel("Nueva Hora de Apertura (0-23):"));
+        panel.add(txtApertura);
+        panel.add(new JLabel("Nueva Hora de Cierre (0-23):"));
+        panel.add(txtCierre);
+
+        int option = JOptionPane.showConfirmDialog(null, panel, "Modificar Horario", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
             try {
-                int opcion = lector.nextInt();
-                lector.nextLine(); // Limpiar el buffer
+                int nuevaHoraApertura = Integer.parseInt(txtApertura.getText());
+                int nuevaHoraCierre = Integer.parseInt(txtCierre.getText());
 
-                switch (opcion) {
-                    case 1 -> cambiarNombreParque();
-                    case 2 -> modificarHorario();
-                    case 3 -> generarReporte();
-                    case 4 -> {
-                        return; // Volver al menú principal
-                    }
-                    default -> System.out.println("Opción inválida. Intente de nuevo.");
+                if (nuevaHoraApertura < 0 || nuevaHoraApertura > 23 || nuevaHoraCierre < 0 || nuevaHoraCierre > 23) {
+                    JOptionPane.showMessageDialog(null, "Horas inválidas. Deben estar entre 0 y 23.");
+                } else {
+                    parque.setHoraApertura(nuevaHoraApertura);
+                    parque.setHoraCierre(nuevaHoraCierre);
+                    JOptionPane.showMessageDialog(null, "Horario modificado exitosamente.");
                 }
-            } catch (Exception e) {
-                System.out.println("Error: Entrada inválida. Por favor, ingrese un número.");
-                lector.nextLine(); // Limpiar el buffer de entrada
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese números válidos.");
             }
         }
     }
 
-    private void cambiarNombreParque() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        System.out.println("CAMBIAR NOMBRE DEL PARQUE");
-        System.out.print("Ingrese el nuevo nombre del parque: ");
-        String nuevoNombre = lector.nextLine();
-        parque.setNombre(nuevoNombre);
-        System.out.println("Nombre del parque cambiado exitosamente.");
-        System.out.println("Presione Enter para continuar...");
-        lector.nextLine();
-    }
-
-    private void modificarHorario() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        System.out.println("MODIFICAR HORARIO");
-        System.out.print("Ingrese la nueva hora de apertura (0-23): ");
-        int nuevaHoraApertura = lector.nextInt();
-        System.out.print("Ingrese la nueva hora de cierre (0-23): ");
-        int nuevaHoraCierre = lector.nextInt();
-        lector.nextLine(); // Limpiar el buffer
-
-        if (nuevaHoraApertura < 0 || nuevaHoraApertura > 23 || nuevaHoraCierre < 0 || nuevaHoraCierre > 23) {
-            System.out.println("Horas inválidas. Deben estar entre 0 y 23.");
-        } else {
-            parque.setHoraApertura(nuevaHoraApertura);
-            parque.setHoraCierre(nuevaHoraCierre);
-            System.out.println("Horario modificado exitosamente.");
-        }
-
-        System.out.println("Presione Enter para continuar...");
-        lector.nextLine();
-    }
-
     private void generarReporte() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        System.out.println("REPORTE DEL PARQUE");
+    // Generar contenido del reporte
+    StringBuilder reporte = new StringBuilder();
+    reporte.append("Nombre del Parque,").append(parque.getNombre()).append("\n");
 
-        // Nombre del parque
-        System.out.println("Nombre del Parque: " + parque.getNombre());
+    // Horario de apertura y cierre
+    int horaApertura = parque.getHoraApertura(); // Asegúrate de tener este método en la clase Parque
+    int horaCierre = parque.getHoraCierre(); // Asegúrate de tener este método en la clase Parque
+    reporte.append("Horario de Apertura,").append(horaApertura).append("\n");
+    reporte.append("Horario de Cierre,").append(horaCierre).append("\n");
 
-        // Generar el contenido del reporte en formato CSV
-        StringBuilder reporte = new StringBuilder();
-        reporte.append("Nombre del Parque,").append(parque.getNombre()).append("\n");
+    // Capacidad máxima
+    int capacidadMaxima = parque.getMapaAtracciones().values().stream()
+                                .mapToInt(Atraccion::getCapacidad)
+                                .sum();
+    reporte.append("Capacidad Máxima,").append(capacidadMaxima).append("\n");
 
-        // Capacidad máxima
-        int capacidadMaxima = parque.getMapaAtracciones().values().stream()
-                                    .mapToInt(Atraccion::getCapacidad)
-                                    .sum();
-        reporte.append("Capacidad Máxima,").append(capacidadMaxima).append("\n");
-        System.out.println("Capacidad Máxima: " + capacidadMaxima);
+    // Número de atracciones
+    int numeroAtracciones = parque.getMapaAtracciones().size();
+    reporte.append("Número de Atracciones,").append(numeroAtracciones).append("\n");
 
-        // Número de atracciones
-        int numeroAtracciones = parque.getMapaAtracciones().size();
-        reporte.append("Número de Atracciones,").append(numeroAtracciones).append("\n");
-        System.out.println("Número de Atracciones: " + numeroAtracciones);
-
-        // Número de reservas
-        int numeroReservas = 0; // Asume que tienes acceso a la lista de reservas
-        for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
-            numeroReservas += atraccion.getReservas().size(); // Sumar reservas de todas las atracciones
-        }
-        reporte.append("Número de Reservas Activas,").append(numeroReservas).append("\n");
-        System.out.println("Número de Reservas Activas: " + numeroReservas);
-
-        // Generar el archivo de reporte
-        try {
-            generarArchivoReporte(reporte.toString());
-            System.out.println("Reporte generado correctamente en reporte_parque.csv.");
-        } catch (IOException e) {
-            System.out.println("Error al generar el reporte: " + e.getMessage());
-        }
-
-        System.out.println("Presione Enter para continuar...");
-        lector.nextLine();
+    // Número de reservas
+    int numeroReservas = 0; 
+    for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
+        numeroReservas += atraccion.getReservas().size(); 
     }
+    reporte.append("Número de Reservas Activas,").append(numeroReservas).append("\n");
 
-    private void generarArchivoReporte(String contenido) throws IOException {
-        String nombreArchivo = "reporte_parque.csv"; // Archivo CSV
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(nombreArchivo), StandardCharsets.UTF_8))) {
-            writer.write(contenido);
-        }
+    // Generar archivo de reporte
+    try {
+        generarArchivoReporte(reporte.toString());
+        JOptionPane.showMessageDialog(null, "Reporte generado correctamente en reporte_parque.csv.");
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + e.getMessage());
     }
+}
+
+private void generarArchivoReporte(String contenido) throws IOException {
+    // Define el nombre del archivo y la ruta donde se guardará
+    String nombreArchivo = "reporte_parque.csv";
+    
+    // Usar un BufferedWriter para crear el archivo CSV
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+        // Escribir el contenido en el archivo
+        writer.write(contenido);
+    }
+}
 }
