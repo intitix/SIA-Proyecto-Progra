@@ -1,86 +1,164 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList; // Importa la clase ArrayList de la biblioteca de Java
+import java.util.List; // Importa la interfaz List de la biblioteca de Java
 
+/**
+ * Clase que representa una atracción en el parque.
+ */
 public class Atraccion {
-    private String nombre;
-    private int capacidad;
-    private int duracion;
-    private List<Reserva> ListaReservas;
+    private String nombre; // Nombre de la atracción
+    private int capacidad; // Capacidad máxima de la atracción
+    private int duracion; // Duración de la atracción en minutos
+    private List<Reserva> ListaReservas; // Lista de reservas para la atracción
 
-    // CONSTRUCTOR
+    /**
+     * Constructor para crear una nueva atracción.
+     *
+     * @param nombre el nombre de la atracción
+     * @param capacidad la capacidad máxima de la atracción
+     * @param duracion la duración de la atracción en minutos
+     */
     public Atraccion(String nombre, int capacidad, int duracion) {
-        this.nombre = nombre;
-        this.capacidad = capacidad;
-        this.duracion = duracion;
+        this.nombre = nombre; // Asigna el nombre de la atracción
+        this.capacidad = capacidad; // Asigna la capacidad máxima
+        this.duracion = duracion; // Asigna la duración
         this.ListaReservas = new ArrayList<>(); // Inicializamos la lista de reservas
     }
 
+    /**
+     * Constructor vacío para crear una atracción sin parámetros.
+     */
     public Atraccion() {
-        this.nombre = "";
-        this.capacidad = 0;
-        this.duracion = 0;
+        this.nombre = ""; // Inicializa el nombre vacío
+        this.capacidad = 0; // Inicializa la capacidad a 0
+        this.duracion = 0; // Inicializa la duración a 0
         this.ListaReservas = new ArrayList<>(); // Inicializamos la lista de reservas
     }
 
     // GETTERS
+
+    /**
+     * Obtiene el nombre de la atracción.
+     *
+     * @return el nombre de la atracción
+     */
     public String getNombre() {
-        return nombre;
+        return nombre; // Devuelve el nombre de la atracción
     }
 
+    /**
+     * Obtiene la capacidad máxima de la atracción.
+     *
+     * @return la capacidad máxima
+     */
     public int getCapacidad() {
-        return capacidad;
+        return capacidad; // Devuelve la capacidad máxima
     }
 
+    /**
+     * Obtiene la duración de la atracción.
+     *
+     * @return la duración en minutos
+     */
     public int getDuracion() {
-        return duracion;
+        return duracion; // Devuelve la duración de la atracción
     }
 
+    /**
+     * Obtiene una copia de la lista de reservas.
+     *
+     * @return una copia de la lista de reservas
+     */
     public List<Reserva> getReservas() {
         return new ArrayList<>(ListaReservas); // Devolvemos una copia de la lista
     }
 
     // SETTERS
+
+    /**
+     * Establece el nombre de la atracción.
+     *
+     * @param nombre el nuevo nombre de la atracción
+     */
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre; // Asigna el nuevo nombre
     }
 
+    /**
+     * Establece la capacidad máxima de la atracción.
+     *
+     * @param capacidad la nueva capacidad máxima
+     */
     public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
+        this.capacidad = capacidad; // Asigna la nueva capacidad
     }
 
+    /**
+     * Establece la duración de la atracción.
+     *
+     * @param duracion la nueva duración en minutos
+     */
     public void setDuracion(int duracion) {
-        this.duracion = duracion;
+        this.duracion = duracion; // Asigna la nueva duración
     }
 
     // Métodos para gestionar las reservas
+
+    /**
+     * Agrega una nueva reserva a la lista de reservas.
+     *
+     * @param reserva la reserva a agregar
+     */
     public void agregarReserva(Reserva reserva) {
-        ListaReservas.add(reserva);
+        ListaReservas.add(reserva); // Agrega la reserva a la lista
     }
 
+    /**
+     * Elimina una reserva de la lista de reservas.
+     *
+     * @param reserva la reserva a eliminar
+     */
     public void eliminarReserva(Reserva reserva) {
-        ListaReservas.remove(reserva);
+        ListaReservas.remove(reserva); // Elimina la reserva de la lista
     }
 
+    /**
+     * Muestra todas las reservas de la atracción.
+     */
     public void mostrarReservas() {
-        if (ListaReservas.isEmpty()) {
-            System.out.println("No hay reservas para esta atracción.");
+        if (ListaReservas.isEmpty()) { // Verifica si la lista está vacía
+            System.out.println("No hay reservas para esta atracción."); // Mensaje si no hay reservas
         } else {
-            for (Reserva reserva : ListaReservas) {
+            for (Reserva reserva : ListaReservas) { // Itera sobre las reservas
                 System.out.println(reserva); // Supone que Reserva tiene un método toString()
             }
         }
     }
-
+    
     // Sobrecarga de métodos
+
+    /**
+     * Muestra el nombre de la atracción.
+     */
     public void mostrarAtraccion() {
-        System.out.println("-" + nombre);
+        System.out.println("-" + nombre); // Imprime el nombre de la atracción
     }
 
+    /**
+     * Muestra detalles de la atracción.
+     *
+     * @param conDetalles indica si se deben mostrar los detalles
+     */
     public void mostrarAtraccion(boolean conDetalles) {
-        if (conDetalles) {
+        if (conDetalles) { // Verifica si se deben mostrar los detalles
             System.out.println("Nombre: " + nombre + ", Capacidad: " + capacidad + ", Duración: " + duracion + " minutos");
         }
     }
-
-
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true; // Compara si son el mismo objeto
+        if (obj == null || getClass() != obj.getClass()) return false; // Verifica si el objeto es nulo o de diferente clase
+        Atraccion atraccion = (Atraccion) obj; // Convierte el objeto a Atraccion
+        return nombre.equals(atraccion.nombre); // Compara el nombre de las atracciones
+    }
 }
