@@ -1,42 +1,52 @@
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.*; // Importa la biblioteca Swing para la interfaz gráfica
+import java.awt.*; // Importa la biblioteca AWT para componentes de interfaz gráfica
 
-
+/**
+ * Clase que gestiona las atracciones en el parque.
+ */
 public class GestorAtracciones {
-    private final Parque parque;
-    private JFrame frame;
+    private final Parque parque; // Referencia al parque donde se gestionan las atracciones
+    private JFrame frame; // Ventana principal para la gestión de atracciones
 
+    /**
+     * Constructor que inicializa el gestor de atracciones.
+     *
+     * @param parque el parque donde se gestionan las atracciones
+     */
     public GestorAtracciones(Parque parque) {
-        this.parque = parque;
-        gestionar();
+        this.parque = parque; // Asigna el parque a la variable de instancia
+        gestionar(); // Llama al método gestionar para inicializar la interfaz
     }
 
+    /**
+     * Método que gestiona la interfaz gráfica de las atracciones.
+     */
     public void gestionar() {
         // Crear el frame
-        frame = new JFrame("Menu Atracciones");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.setLayout(new GridLayout(7, 1)); // Crear un layout con 6 botones
-        frame.setLocationRelativeTo(null); // Para centrar el JFrame en la pantalla
+        frame = new JFrame("Menu Atracciones"); // Inicializa la ventana con un título
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Permite cerrar solo esta ventana
+        frame.setSize(400, 300); // Establece el tamaño de la ventana
+        frame.setLayout(new GridLayout(7, 1)); // Crea un layout con 7 filas para los botones
+        frame.setLocationRelativeTo(null); // Centra el JFrame en la pantalla
         
-        JLabel lblTitulo = new JLabel("Gestor de Atracciones", SwingConstants.CENTER);
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18));
-        frame.add(lblTitulo);
+        JLabel lblTitulo = new JLabel("Gestor de Atracciones", SwingConstants.CENTER); // Crea una etiqueta con el título
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 18)); // Establece el estilo de la fuente
+        frame.add(lblTitulo); // Añade la etiqueta al frame
         
         // Crear botones para las opciones del menú
-        JButton btnCrearAtraccion = new JButton("1. Crear Atracción");
-        JButton btnListaAtracciones = new JButton("2. Lista Atracciones");
-        JButton btnModificarAtraccion = new JButton("3. Modificar Atracción");
-        JButton btnBuscarPorCapacidad = new JButton("4. Buscar Atracciones por Rango de Capacidad");
-        JButton btnEliminarAtraccion = new JButton("5. Eliminar Atracción");
-        JButton btnVolver = new JButton("6. Volver al Menú Principal");
+        JButton btnCrearAtraccion = new JButton("1. Crear Atracción"); // Botón para crear una atracción
+        JButton btnListaAtracciones = new JButton("2. Lista Atracciones"); // Botón para listar atracciones
+        JButton btnModificarAtraccion = new JButton("3. Modificar Atracción"); // Botón para modificar una atracción
+        JButton btnBuscarPorCapacidad = new JButton("4. Buscar Atracciones por Rango de Capacidad"); // Botón para buscar atracciones por capacidad
+        JButton btnEliminarAtraccion = new JButton("5. Eliminar Atracción"); // Botón para eliminar una atracción
+        JButton btnVolver = new JButton("6. Volver al Menú Principal"); // Botón para volver al menú principal
 
         // Agregar eventos a los botones
-        btnCrearAtraccion.addActionListener(e -> crearAtraccion());
-        btnListaAtracciones.addActionListener(e -> mostrarAtracciones());
-        btnModificarAtraccion.addActionListener(e -> modificarAtraccion());
-        btnBuscarPorCapacidad.addActionListener(e -> mostrarAtraccionesPorRango());
-        btnEliminarAtraccion.addActionListener(e -> eliminarAtraccion());
+        btnCrearAtraccion.addActionListener(e -> crearAtraccion()); // Acción del botón para crear atracción
+        btnListaAtracciones.addActionListener(e -> mostrarAtracciones()); // Acción del botón para mostrar atracciones
+        btnModificarAtraccion.addActionListener(e -> modificarAtraccion()); // Acción del botón para modificar atracción
+        btnBuscarPorCapacidad.addActionListener(e -> mostrarAtraccionesPorRango()); // Acción del botón para buscar por capacidad
+        btnEliminarAtraccion.addActionListener(e -> eliminarAtraccion()); // Acción del botón para eliminar atracción
         btnVolver.addActionListener(e -> {
             frame.dispose(); // Cierra el gestor de atracciones
             Main.mostrarMenuPrincipal(parque); // Vuelve al menú principal
@@ -50,87 +60,111 @@ public class GestorAtracciones {
         frame.add(btnEliminarAtraccion);
         frame.add(btnVolver);
         
-
         // Hacer visible el frame
-        frame.setVisible(true);
+        frame.setVisible(true); // Muestra la ventana
     }
 
+    /**
+     * Método para crear una nueva atracción.
+     */
     private void crearAtraccion() {
         // Abrir diálogo para ingresar los datos de la atracción
-        String nombre = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la nueva atracción:");
-        String capacidadStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad:");
-        String duracionStr = JOptionPane.showInputDialog(frame, "Ingrese la duración (en minutos):");
+        String nombre = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la nueva atracción:"); // Solicita el nombre
+        String capacidadStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad:"); // Solicita la capacidad
+        String duracionStr = JOptionPane.showInputDialog(frame, "Ingrese la duración (en minutos):"); // Solicita la duración
 
+        // Verifica que los campos no sean nulos
         if (nombre != null && capacidadStr != null && duracionStr != null) {
             try {
+                // Convierte los valores ingresados a numéricos
                 int capacidad = Integer.parseInt(capacidadStr);
                 int duracion = Integer.parseInt(duracionStr);
+                // Crea una nueva atracción y la agrega al parque
                 Atraccion nuevaAtraccion = new Atraccion(nombre, capacidad, duracion);
                 parque.agregarAtraccion(nombre, nuevaAtraccion);
-                JOptionPane.showMessageDialog(frame, "Atracción creada exitosamente.");
+                JOptionPane.showMessageDialog(frame, "Atracción creada exitosamente."); // Mensaje de éxito
             } catch (NumberFormatException e) {
+                // Manejo de error si la conversión falla
                 JOptionPane.showMessageDialog(frame, "Error: Ingrese valores numéricos válidos para capacidad y duración.");
             }
         }
     }
 
+    /**
+     * Muestra la lista de atracciones en el parque.
+     */
     private void mostrarAtracciones() {
-        StringBuilder listaAtracciones = new StringBuilder("Lista de atracciones:\n");
+        StringBuilder listaAtracciones = new StringBuilder("Lista de atracciones:\n"); // Crea un StringBuilder para la lista
 
+        // Itera sobre las atracciones y las añade a la lista
         for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
             listaAtracciones.append(atraccion.getNombre()).append(" - Capacidad: ")
                     .append(atraccion.getCapacidad()).append(" - Duración: ")
                     .append(atraccion.getDuracion()).append(" min\n");
         }
 
+        // Muestra la lista de atracciones
         JOptionPane.showMessageDialog(frame, listaAtracciones.toString());
     }
 
+    /**
+     * Modifica los detalles de una atracción existente.
+     */
     private void modificarAtraccion() {
-        String nombre = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la atracción a modificar:");
-        Atraccion atraccion = parque.buscarAtraccion(nombre);
+        String nombre = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la atracción a modificar:"); // Solicita el nombre de la atracción
+        Atraccion atraccion = parque.buscarAtraccion(nombre); // Busca la atracción en el parque
 
-        if (atraccion != null) {
+        if (atraccion != null) { // Verifica si la atracción existe
+            // Solicita nuevos valores para la atracción
             String nuevoNombre = JOptionPane.showInputDialog(frame, "Ingrese el nuevo nombre (deje vacío para mantener):", atraccion.getNombre());
             String nuevaCapacidadStr = JOptionPane.showInputDialog(frame, "Ingrese la nueva capacidad (deje vacío para mantener):", atraccion.getCapacidad());
             String nuevaDuracionStr = JOptionPane.showInputDialog(frame, "Ingrese la nueva duración (deje vacío para mantener):", atraccion.getDuracion());
 
+            // Verifica y actualiza el nombre
             if (nuevoNombre != null && !nuevoNombre.isEmpty()) {
                 atraccion.setNombre(nuevoNombre);
             }
 
+            // Verifica y actualiza la capacidad
             if (nuevaCapacidadStr != null && !nuevaCapacidadStr.isEmpty()) {
                 try {
                     atraccion.setCapacidad(Integer.parseInt(nuevaCapacidadStr));
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(frame, "Error: Capacidad no válida.");
+                    JOptionPane.showMessageDialog(frame, "Error: Capacidad no válida."); // Manejo de error
                 }
             }
 
+            // Verifica y actualiza la duración
             if (nuevaDuracionStr != null && !nuevaDuracionStr.isEmpty()) {
                 try {
                     atraccion.setDuracion(Integer.parseInt(nuevaDuracionStr));
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(frame, "Error: Duración no válida.");
+                    JOptionPane.showMessageDialog(frame, "Error: Duración no válida."); // Manejo de error
                 }
             }
 
+            // Mensaje de éxito
             JOptionPane.showMessageDialog(frame, "Atracción modificada exitosamente.");
         } else {
+            // Mensaje si la atracción no fue encontrada
             JOptionPane.showMessageDialog(frame, "Atracción no encontrada.");
         }
     }
 
+    /**
+     * Muestra atracciones que están dentro de un rango de capacidad.
+     */
     private void mostrarAtraccionesPorRango() {
-        String capacidadMinStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad mínima:");
-        String capacidadMaxStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad máxima:");
+        String capacidadMinStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad mínima:"); // Solicita capacidad mínima
+        String capacidadMaxStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad máxima:"); // Solicita capacidad máxima
 
         try {
-            int capacidadMin = Integer.parseInt(capacidadMinStr);
-            int capacidadMax = Integer.parseInt(capacidadMaxStr);
+            int capacidadMin = Integer.parseInt(capacidadMinStr); // Convierte a numérico
+            int capacidadMax = Integer.parseInt(capacidadMaxStr); // Convierte a numérico
 
-            StringBuilder atraccionesEnRango = new StringBuilder("Atracciones en el rango:\n");
+            StringBuilder atraccionesEnRango = new StringBuilder("Atracciones en el rango:\n"); // Crea un StringBuilder para mostrar las atracciones en el rango
 
+            // Itera sobre las atracciones y verifica su capacidad
             for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
                 if (atraccion.getCapacidad() >= capacidadMin && atraccion.getCapacidad() <= capacidadMax) {
                     atraccionesEnRango.append(atraccion.getNombre()).append(" - Capacidad: ")
@@ -138,18 +172,24 @@ public class GestorAtracciones {
                 }
             }
 
+            // Muestra la lista de atracciones en el rango
             JOptionPane.showMessageDialog(frame, atraccionesEnRango.toString());
         } catch (NumberFormatException e) {
+            // Manejo de error si la conversión falla
             JOptionPane.showMessageDialog(frame, "Error: Ingrese valores numéricos válidos.");
         }
     }
 
+    /**
+     * Elimina una atracción del parque.
+     */
     private void eliminarAtraccion() {
-        String nombreEliminar = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la atracción a eliminar:");
+        String nombreEliminar = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la atracción a eliminar:"); // Solicita el nombre de la atracción
+        // Elimina la atracción y muestra un mensaje correspondiente
         if (parque.eliminarAtraccion(nombreEliminar)) {
             JOptionPane.showMessageDialog(frame, "Atracción eliminada exitosamente.");
         } else {
-            JOptionPane.showMessageDialog(frame, "Atracción no encontrada.");
+            JOptionPane.showMessageDialog(frame, "Atracción no encontrada."); // Mensaje si no fue encontrada
         }
     }
 }
