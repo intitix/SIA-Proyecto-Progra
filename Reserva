@@ -5,9 +5,8 @@ import java.util.Date; // Importa la clase Date para manejar fechas y horas
  * Clase que representa una reserva en una atracción del parque.
  */
 public class Reserva {
-    @SuppressWarnings("FieldMayBeFinal") // Suprime advertencias sobre campos que podrían ser finales
+
     private int grupoPersonas; // Número de personas en la reserva
-    private Atraccion atraccion; // Atracción asociada a la reserva
     private Date fechaHora; // Fecha y hora de la reserva
 
     /**
@@ -19,7 +18,6 @@ public class Reserva {
      */
     public Reserva(int grupoPersonas, Atraccion atraccion, Date fechaHora) {
         this.grupoPersonas = grupoPersonas; // Inicializa el número de personas
-        this.atraccion = atraccion; // Inicializa la atracción
         this.fechaHora = fechaHora; // Inicializa la fecha y hora
     }
 
@@ -33,12 +31,12 @@ public class Reserva {
     }
 
     /**
-     * Obtiene la atracción asociada a la reserva.
+     * Establece el número de personas en la reserva.
      *
-     * @return la atracción
+     * @param grupoPersonas el número de personas que participarán en la reserva
      */
-    public Atraccion getAtraccion() {
-        return atraccion; // Retorna la atracción
+    public void setGrupoPersonas(int grupoPersonas) {
+        this.grupoPersonas = grupoPersonas; // Actualiza el número de personas
     }
 
     /**
@@ -48,6 +46,15 @@ public class Reserva {
      */
     public Date getFechaHora() {
         return fechaHora; // Retorna la fecha y hora
+    }
+
+    /**
+     * Establece la fecha y hora de la reserva.
+     *
+     * @param fechaHora la nueva fecha y hora para la reserva
+     */
+    public void setFechaHora(Date fechaHora) {
+        this.fechaHora = fechaHora; // Actualiza la fecha y hora
     }
 
     /**
