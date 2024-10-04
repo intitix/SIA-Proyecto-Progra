@@ -162,9 +162,9 @@ public class GestorReservas {
     }
 
     /**
-     * Método que busca reservas para un día específico.
+     * Método para buscar reservas en una fecha específica.
      *
-     * @throws ParseException si la fecha no se puede analizar
+     * @throws ParseException si la fecha ingresada no tiene el formato correcto
      */
     private void buscarReservasPorDia() throws ParseException {
         // Campo para ingresar la fecha
@@ -180,20 +180,32 @@ public class GestorReservas {
             Date fechaBuscada = new SimpleDateFormat("dd/MM/yyyy").parse(fechaStr); // Convertir la cadena en Date
 
             boolean hayReservas = false; // Bandera para verificar si hay reservas encontradas
+            StringBuilder listaReservas = new StringBuilder("Reservas para la fecha: " + fechaStr + "\n");
+
             // Iterar sobre cada atracción en el parque
             for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
                 for (Reserva reserva : atraccion.getReservas()) { // Iterar sobre las reservas de la atracción
-                    // Comparar la fecha de la reserva con la fechaBuscada
-                    if (reserva.getFechaHora().compareTo(fechaBuscada) == 0) {
-                        JOptionPane.showMessageDialog(frame, "Atracción: " + atraccion.getNombre() + " - " + reserva); // Muestra la reserva encontrada
+                    // Comparar solo la parte de la fecha (sin la hora)
+                    SimpleDateFormat sdfDia = new SimpleDateFormat("dd/MM/yyyy");
+                    String fechaReservaStr = sdfDia.format(reserva.getFechaHora());
+                    Date fechaReserva = sdfDia.parse(fechaReservaStr);
+
+                    // Si la fecha de la reserva coincide con la fecha buscada
+                    if (fechaReserva.equals(fechaBuscada)) {
+                        listaReservas.append("Atracción: ").append(atraccion.getNombre()) // Agregar nombre de la atracción
+                            .append(" - Grupo de personas: ").append(reserva.getGrupoPersonas()) // Información de la reserva
+                            .append(" - Hora: ").append(sdf.format(reserva.getFechaHora())) // Formatear la fecha con hora
+                            .append("\n");
                         hayReservas = true; // Se encontró al menos una reserva
                     }
                 }
             }
 
             // Si no se encontraron reservas, se notifica al usuario
-            if (!hayReservas) {
-                JOptionPane.showMessageDialog(frame, "No se encontraron reservas para la fecha indicada.");
+            if (hayReservas) {
+                JOptionPane.showMessageDialog(null, listaReservas.toString()); // Mostrar reservas encontradas
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontraron reservas para la fecha indicada.");
             }
         }
     }
