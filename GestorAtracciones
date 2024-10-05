@@ -91,21 +91,43 @@ public class GestorAtracciones {
     }
 
     /**
-     * Muestra la lista de atracciones en el parque.
-     */
-    private void mostrarAtracciones() {
-        StringBuilder listaAtracciones = new StringBuilder("Lista de atracciones:\n"); // Crea un StringBuilder para la lista
+    * Sobrecarga de métodos  
+    */
 
-        // Itera sobre las atracciones y las añade a la lista
+    /**
+    * Muestra la lista de atracciones solo con los nombres.
+    */
+    private void mostrarAtracciones() {
+        StringBuilder listaAtracciones = new StringBuilder("Lista de atracciones:\n");
+
+        // Itera sobre las atracciones y muestra solo los nombres
         for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
-            listaAtracciones.append(atraccion.getNombre()).append(" - Capacidad: ")
-                    .append(atraccion.getCapacidad()).append(" - Duración: ")
-                    .append(atraccion.getDuracion()).append(" min\n");
+            listaAtracciones.append(atraccion.getNombre()).append("\n");
         }
 
         // Muestra la lista de atracciones
         JOptionPane.showMessageDialog(frame, listaAtracciones.toString());
     }
+    
+    /**
+    * Muestra la lista de atracciones con detalles.
+    */
+    private void mostrarAtracciones(boolean conDetalles) {
+        StringBuilder listaAtracciones = new StringBuilder("Lista de atracciones:\n");
+
+        // Si se especifica que se muestran los detalles, mostrar nombre, capacidad y duración
+        if (conDetalles) {
+            for (Atraccion atraccion : parque.getMapaAtracciones().values()) {
+                listaAtracciones.append(atraccion.getNombre()).append(" - Capacidad: ")
+                        .append(atraccion.getCapacidad()).append(" - Duración: ")
+                        .append(atraccion.getDuracion()).append(" min\n");
+            }
+        }
+
+        // Muestra la lista de atracciones con detalles
+        JOptionPane.showMessageDialog(frame, listaAtracciones.toString());
+    }
+
 
     /**
      * Modifica los detalles de una atracción existente.
