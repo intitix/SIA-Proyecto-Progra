@@ -200,7 +200,7 @@ public class Parque {
         writer.close(); // Cierra el escritor
     }
 
-    // Métodos para gestionar atracciones
+    // Sobrecarga de métodos para gestionar atracciones
     /**
      * Agrega una nueva atracción al parque.
      *
@@ -209,6 +209,17 @@ public class Parque {
      */
     public void agregarAtraccion(String nombreAtraccion, Atraccion atraccion) {
         mapaAtracciones.put(nombreAtraccion, atraccion); // Agrega la atracción al mapa
+    }
+    
+    /**
+    * Agrega una nueva atracción al parque con valores predeterminados.
+    *
+    * @param nombreAtraccion el nombre de la atracción
+     */
+    public void agregarAtraccion(String nombreAtraccion) {
+        Atraccion atraccion = new Atraccion(nombreAtraccion, 30, 15); // Capacidad predeterminada 30, duración 15 min
+        mapaAtracciones.put(nombreAtraccion, atraccion); // Agrega la atracción al mapa
+        System.out.println("Atracción '" + nombreAtraccion + "' agregada con valores predeterminados.");
     }
 
     /**
