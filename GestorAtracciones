@@ -70,22 +70,38 @@ public class GestorAtracciones {
     private void crearAtraccion() {
         // Abrir diálogo para ingresar los datos de la atracción
         String nombre = JOptionPane.showInputDialog(frame, "Ingrese el nombre de la nueva atracción:"); // Solicita el nombre
-        String capacidadStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad:"); // Solicita la capacidad
-        String duracionStr = JOptionPane.showInputDialog(frame, "Ingrese la duración (en minutos):"); // Solicita la duración
 
-        // Verifica que los campos no sean nulos
-        if (nombre != null && capacidadStr != null && duracionStr != null) {
-            try {
-                // Convierte los valores ingresados a numéricos
-                int capacidad = Integer.parseInt(capacidadStr);
-                int duracion = Integer.parseInt(duracionStr);
-                // Crea una nueva atracción y la agrega al parque
-                Atraccion nuevaAtraccion = new Atraccion(nombre, capacidad, duracion);
-                parque.agregarAtraccion(nombre, nuevaAtraccion);
-                JOptionPane.showMessageDialog(frame, "Atracción creada exitosamente."); // Mensaje de éxito
-            } catch (NumberFormatException e) {
-                // Manejo de error si la conversión falla
-                JOptionPane.showMessageDialog(frame, "Error: Ingrese valores numéricos válidos para capacidad y duración.");
+        // Si el nombre no es nulo, se procede
+        if (nombre != null) {
+            // Pregunta si desea ingresar capacidad y duración
+            int respuesta = JOptionPane.showConfirmDialog(frame, "¿Desea ingresar capacidad y duración? (Si no, se usarán valores predeterminados)");
+
+            if (respuesta == JOptionPane.YES_OPTION) {
+                // Solicita la capacidad y la duración
+                String capacidadStr = JOptionPane.showInputDialog(frame, "Ingrese la capacidad:"); // Solicita la capacidad
+                String duracionStr = JOptionPane.showInputDialog(frame, "Ingrese la duración (en minutos):"); // Solicita la duración
+
+                // Verifica que los campos no sean nulos
+                if (capacidadStr != null && duracionStr != null) {
+                    try {
+                        // Convierte los valores ingresados a numéricos
+                        int capacidad = Integer.parseInt(capacidadStr);
+                        int duracion = Integer.parseInt(duracionStr);
+
+                        // Crea una nueva atracción con los valores proporcionados
+                        Atraccion nuevaAtraccion = new Atraccion(nombre, capacidad, duracion);
+                        parque.agregarAtraccion(nombre, nuevaAtraccion); // Se mantiene la forma original de agregar atracción
+                        JOptionPane.showMessageDialog(frame, "Atracción creada exitosamente con capacidad y duración.");
+                    } catch (NumberFormatException e) {
+                        // Manejo de error si la conversión falla
+                        JOptionPane.showMessageDialog(frame, "Error: Ingrese valores numéricos válidos para capacidad y duración.");
+                    }
+                }
+            } else {
+                // Si no quiere ingresar capacidad y duración, usa valores predeterminados
+                Atraccion nuevaAtraccion = new Atraccion(nombre, 50, 30); // Capacidad predeterminada de 50 y duración de 30 min
+                parque.agregarAtraccion(nombre, nuevaAtraccion); // Se mantiene la forma original de agregar atracción
+                JOptionPane.showMessageDialog(frame, "Atracción creada exitosamente con valores predeterminados.");
             }
         }
     }
