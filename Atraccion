@@ -134,26 +134,6 @@ public class Atraccion {
         }
     }
     
-    // Sobrecarga de métodos
-
-    /**
-     * Muestra el nombre de la atracción.
-     */
-    public void mostrarAtraccion() {
-        System.out.println("-" + nombre); // Imprime el nombre de la atracción
-    }
-
-    /**
-     * Muestra detalles de la atracción.
-     *
-     * @param conDetalles indica si se deben mostrar los detalles
-     */
-    public void mostrarAtraccion(boolean conDetalles) {
-        if (conDetalles) { // Verifica si se deben mostrar los detalles
-            System.out.println("Nombre: " + nombre + ", Capacidad: " + capacidad + ", Duración: " + duracion + " minutos");
-        }
-    }
-    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true; // Compara si son el mismo objeto
