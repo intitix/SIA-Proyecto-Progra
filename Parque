@@ -287,30 +287,4 @@ public class Parque {
             System.out.println("La atracción no existe."); // Mensaje si la atracción no se encuentra
         }
     }
-
-    // Método para mostrar solo la información básica del parque
-    /**
-     * Muestra la información básica del parque.
-     */
-    public void mostrarInfo() {
-        System.out.println("Nombre del Parque: " + nombre); // Muestra el nombre del parque
-        System.out.println("Horario: " + horaApertura + " - " + horaCierre); // Muestra el horario
-    }
-
-    /**
-     * Sobrecarga de método para mostrar la información del parque junto con sus atracciones.
-     *
-     * @param mostrarAtracciones indica si se deben mostrar las atracciones o no
-     */
-    public void mostrarInfo(boolean mostrarAtracciones) {
-        mostrarInfo(); // Llama al método de información básica
-        if (mostrarAtracciones) {
-            System.out.println("Atracciones:"); // Mensaje informativo
-            for (Atraccion atraccion : mapaAtracciones.values()) {
-                atraccion.mostrarAtraccion(); // Muestra la atracción
-            }
-        } else {
-            System.out.println("Atracciones no mostradas."); // Mensaje si no se muestran las atracciones
-        }
-    }
 }
