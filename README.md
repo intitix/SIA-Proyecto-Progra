@@ -4,7 +4,7 @@
 
 2) Abrir NetBeans 
 
-3) Seleccionar opción Open File
+3) Seleccionar opción Open File/Import file
 
 4) Seleccionar el archivo .zip "ProyectoParqueAtracciones" del proyecto
    
