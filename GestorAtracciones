@@ -43,7 +43,7 @@ public class GestorAtracciones {
 
         // Agregar eventos a los botones
         btnCrearAtraccion.addActionListener(e -> crearAtraccion()); // Acción del botón para crear atracción
-        btnListaAtracciones.addActionListener(e -> mostrarAtracciones()); // Acción del botón para mostrar atracciones
+        btnListaAtracciones.addActionListener(e -> mostrarAtracciones(true)); // Acción del botón para mostrar atracciones
         btnModificarAtraccion.addActionListener(e -> modificarAtraccion()); // Acción del botón para modificar atracción
         btnBuscarPorCapacidad.addActionListener(e -> mostrarAtraccionesPorRango()); // Acción del botón para buscar por capacidad
         btnEliminarAtraccion.addActionListener(e -> eliminarAtraccion()); // Acción del botón para eliminar atracción
